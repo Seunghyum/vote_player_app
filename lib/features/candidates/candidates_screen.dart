@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
 
@@ -26,7 +27,6 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('후보자 검색 화면')),
       body: FutureBuilder(
         future: _candidates,
         builder: (context, snapshot) {
@@ -37,7 +37,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                   height: 50,
                 ),
                 Expanded(
-                  child: ListView.separated(
+                  child: ListView.builder(
                     // scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.length,
                     padding: const EdgeInsets.symmetric(
@@ -47,16 +47,20 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                     itemBuilder: (context, index) {
                       var candidate = snapshot.data![index];
                       return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey.shade400,
+                        ),
                         title: Text(
                           candidate.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         subtitle: Text(candidate.jdname),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        width: 40,
+                        trailing: const Icon(
+                          Icons.chevron_right_sharp,
+                          size: Sizes.size32,
+                        ),
                       );
                     },
                   ),
