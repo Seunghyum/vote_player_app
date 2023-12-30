@@ -1,0 +1,40 @@
+class CandidateModel {
+  final String sggname,
+      sdname,
+      wiwname,
+      jdname,
+      name,
+      hanjaname,
+      gender,
+      addr,
+      job,
+      edu,
+      career1,
+      career2,
+      status;
+  final int id, sgid, huboid, birthday, age, jobid, eduid, regdate, sgtypecode;
+
+  CandidateModel.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        sgid = json['sgid'],
+        sgtypecode = json['sgtypecode'],
+        huboid = json['huboid'],
+        sggname = json['sggname'],
+        sdname = json['sdname'],
+        wiwname = json['wiwname'],
+        jdname = json['jdname'],
+        name = json['name'],
+        hanjaname = json['hanjaname'],
+        gender = json['gender'],
+        birthday = json['birthday'],
+        age = json['age'],
+        addr = json['addr'],
+        jobid = json['jobid'],
+        job = json['job'],
+        eduid = json['eduid'],
+        edu = json['edu'],
+        career1 = json['career1'],
+        career2 = json['career2'],
+        regdate = json['regdate'],
+        status = json['status'];
+}
