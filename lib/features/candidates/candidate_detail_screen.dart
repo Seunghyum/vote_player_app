@@ -17,7 +17,6 @@ class CandidateDetailScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
-          color: Colors.white,
           child: SizedBox(
             width: 100,
             height: 100,

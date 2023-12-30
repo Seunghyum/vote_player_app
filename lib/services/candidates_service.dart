@@ -1,14 +1,14 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/services/constants/service_keys.dart';
 
 var logger = Logger();
 
 class CandidatesService {
   late List<CandidateModel> candidates;
-  late String? candidatesServiceKey = ServiceKeys.candidatesServiceKey;
+  late String? serviceKey = dotenv.env['serviceKey'];
   late int? pageNo = 1;
   late int? numOfRows = 15;
   late int? sgId;
@@ -16,7 +16,7 @@ class CandidatesService {
   late int? cnddtId;
 
   CandidatesService({
-    this.candidatesServiceKey,
+    this.serviceKey,
     this.pageNo,
     this.numOfRows,
     this.sgId,
@@ -36,7 +36,7 @@ class CandidatesService {
       var path =
           'https://vote-player.s3.ap-northeast-2.amazonaws.com/candidates_data.json';
       // var path =
-      //     "${dotenv.env['candidateUrlPath']}/getPoelpcddRegistSttusInfoInqire?serviceKey=$candidatesServiceKey&pageNo=$pageNo&numOfRows=$numOfRows&sgId=$sgId&sgTypecode=$sgTypecode";
+      //     "${dotenv.env['candidateUrlPath']}?serviceKey=$serviceKey&pageNo=$pageNo&numOfRows=$numOfRows&sgId=$sgId&sgTypecode=$sgTypecode";
       // if (sggName != null && sggName.isNotEmpty) path += "&sggName=$sggName";
       // if (sdName != null && sdName.isNotEmpty) path += "&sdName=$sdName";
       final url = Uri.parse(
