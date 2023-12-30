@@ -27,26 +27,23 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _candidates,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    // scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.length,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 15,
-                    ),
-                    itemBuilder: (context, index) {
-                      var candidate = snapshot.data![index];
-                      return ListTile(
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            title: Text('후보자 화면'),
+          ),
+          FutureBuilder(
+            future: _candidates,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SliverList.builder(
+                  itemCount: snapshot.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    var candidate = snapshot.data![index];
+                    return Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Sizes.size10),
+                      child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.grey.shade400,
                         ),
@@ -61,17 +58,19 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                           Icons.chevron_right_sharp,
                           size: Sizes.size32,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                );
+              }
+              return const SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ],
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
