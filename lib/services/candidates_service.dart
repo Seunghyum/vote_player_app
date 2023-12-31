@@ -24,14 +24,7 @@ class CandidatesService {
     this.cnddtId,
   });
 
-  Future<List<CandidateModel>> getCandidates({
-    required int pageNo,
-    required int numOfRows,
-    required int sgId,
-    required int sgTypecode,
-    String? sggName,
-    String? sdName,
-  }) async {
+  Future<List<CandidateModel>> getCandidates() async {
     try {
       String? path = '${dotenv.env['API_PATH']}/candidates';
 
@@ -54,6 +47,26 @@ class CandidatesService {
     } catch (err) {
       logger.e(err);
       return [];
+    }
+  }
+
+  Future<CandidateModel> getCandidateById(String id) async {
+    try {
+      String? path = '${dotenv.env['API_PATH']}/candidates/$id';
+
+      final url = Uri.parse(
+        path,
+      );
+
+      final response = await http.get(url);
+      final statusCode = response.statusCode;
+
+      if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
+      final data = jsonDecode(response.body);
+
+      return CandidateModel.fromJson(data);
+    } catch (err) {
+      throw 'err';
     }
   }
 }

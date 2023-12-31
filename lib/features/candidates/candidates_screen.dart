@@ -25,7 +25,6 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return CandidateDetailScreen(
             id: id,
-            imageUrl: imageUrl,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -45,12 +44,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   @override
   void initState() {
-    _candidates = CandidatesService().getCandidates(
-      pageNo: 1,
-      numOfRows: 15,
-      sgId: 20240410,
-      sgTypecode: 2,
-    );
+    _candidates = CandidatesService().getCandidates();
     super.initState();
   }
 
