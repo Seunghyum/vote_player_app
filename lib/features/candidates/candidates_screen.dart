@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/candidate_detail_screen.dart';
+
 import 'package:vote_player_app/features/candidates/widgets/search_input.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
@@ -16,15 +17,23 @@ class CandidatesScreen extends StatefulWidget {
 class _CandidatesScreenState extends State<CandidatesScreen> {
   late Future<List<CandidateModel>> _candidates;
 
-  void _onListTileTap({required String id, String? imageUrl}) {
+  void _onListTileTap({
+    required String id,
+    required String imagePath,
+    required String name,
+    required String partyName,
+  }) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
-        transitionDuration: const Duration(milliseconds: 200),
-        reverseTransitionDuration: const Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) {
           return CandidateDetailScreen(
             id: id,
+            imagePath: imagePath,
+            name: name,
+            partyName: partyName,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -85,21 +94,14 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         child: ListTile(
                           onTap: () => _onListTileTap(
                             id: candidate.id,
+                            imagePath: imagePath,
+                            name: candidate.koName,
+                            partyName: candidate.partyName,
                           ),
                           leading: Hero(
                             tag: candidate.id,
-                            child: Container(
-                              padding: const EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(50),
-                                ), //here
-                                color: Colors.grey.shade400,
-                              ),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.grey.shade400,
-                                foregroundImage: NetworkImage(imagePath),
-                              ),
+                            child: CircleAvatar(
+                              foregroundImage: NetworkImage(imagePath),
                             ),
                           ),
                           title: Text(
@@ -109,7 +111,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                             ),
                           ),
                           subtitle: Text(
-                            candidate.partName,
+                            candidate.partyName,
                           ),
                           trailing: const Icon(
                             Icons.chevron_right_sharp,

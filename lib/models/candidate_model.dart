@@ -1,12 +1,12 @@
 class CandidateModel {
-  final String enName, koName, partName, history, id;
+  final String enName, koName, partyName, history, id;
   final Map<String, dynamic> intro;
 
   CandidateModel.fromJson(Map<String, dynamic> json)
       : id = json['_id'],
         enName = json['enName'],
         koName = json['koName'],
-        partName = json['partName'],
+        partyName = json['partyName'],
         history = json['history'],
         intro = json['intro'];
 }
