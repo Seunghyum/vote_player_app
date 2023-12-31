@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 
 class CandidateDetailScreen extends StatelessWidget {
-  final int id;
+  final String id;
   final String? imageUrl;
   const CandidateDetailScreen({
     super.key,

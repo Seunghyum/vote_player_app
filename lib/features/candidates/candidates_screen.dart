@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/candidate_detail_screen.dart';
 import 'package:vote_player_app/features/candidates/widgets/search_input.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/utils/url.dart';
 
 class CandidatesScreen extends StatefulWidget {
   const CandidatesScreen({super.key});
@@ -16,7 +16,7 @@ class CandidatesScreen extends StatefulWidget {
 class _CandidatesScreenState extends State<CandidatesScreen> {
   late Future<List<CandidateModel>> _candidates;
 
-  void _onListTileTap({required int id, String? imageUrl}) {
+  void _onListTileTap({required String id, String? imageUrl}) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
@@ -79,7 +79,11 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                   return SliverList.builder(
                     itemCount: snapshot.data?.length ?? 0,
                     itemBuilder: (context, index) {
-                      var candidate = snapshot.data![index];
+                      final candidate = snapshot.data![index];
+                      final imagePath = getS3ImageUrl(
+                        BucketCategory.candidates,
+                        '${candidate.enName}.png',
+                      );
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: Sizes.size10,
@@ -87,25 +91,32 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         child: ListTile(
                           onTap: () => _onListTileTap(
                             id: candidate.id,
-                            // imageUrl: null,
                           ),
                           leading: Hero(
                             tag: candidate.id,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.grey.shade400,
-                              foregroundImage: const NetworkImage(
-                                'https://picsum.photos/200/300',
+                            child: Container(
+                              padding: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(50),
+                                ), //here
+                                color: Colors.grey.shade400,
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey.shade400,
+                                foregroundImage: NetworkImage(imagePath),
                               ),
                             ),
                           ),
                           title: Text(
-                            candidate.name,
+                            candidate.koName,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           subtitle: Text(
-                              '${candidate.jdname} / ${candidate.sggname}'),
+                            candidate.partName,
+                          ),
                           trailing: const Icon(
                             Icons.chevron_right_sharp,
                             size: Sizes.size32,

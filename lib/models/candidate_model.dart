@@ -1,40 +1,27 @@
 class CandidateModel {
-  final String sggname,
-      sdname,
-      wiwname,
-      jdname,
-      name,
-      hanjaname,
-      gender,
-      addr,
-      job,
-      edu,
-      career1,
-      career2,
-      status;
-  final int id, sgid, huboid, birthday, age, jobid, eduid, regdate, sgtypecode;
+  final String enName, koName, partName, history, id;
+  final Map<String, dynamic> intro;
 
   CandidateModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        sgid = json['sgid'],
-        sgtypecode = json['sgtypecode'],
-        huboid = json['huboid'],
-        sggname = json['sggname'],
-        sdname = json['sdname'],
-        wiwname = json['wiwname'],
-        jdname = json['jdname'],
-        name = json['name'],
-        hanjaname = json['hanjaname'],
-        gender = json['gender'],
-        birthday = json['birthday'],
-        age = json['age'],
-        addr = json['addr'],
-        jobid = json['jobid'],
-        job = json['job'],
-        eduid = json['eduid'],
-        edu = json['edu'],
-        career1 = json['career1'],
-        career2 = json['career2'],
-        regdate = json['regdate'],
-        status = json['status'];
+      : id = json['_id'],
+        enName = json['enName'],
+        koName = json['koName'],
+        partName = json['partName'],
+        history = json['history'],
+        intro = json['intro'];
+}
+
+class IntroModel {
+  String electoralDistrict = '';
+  String affiliatedCommittee = '';
+  String electionCount = '';
+  String officePhone = '';
+  String officeRoom = '';
+  String memberHomepage = '';
+  String individualHomepage = '';
+  String email = '';
+  String aide = '';
+  String chiefOfStaff = '';
+  String secretary = '';
+  String officeGuide = '';
 }

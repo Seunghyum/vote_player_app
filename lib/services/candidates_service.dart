@@ -33,19 +33,18 @@ class CandidatesService {
     String? sdName,
   }) async {
     try {
-      var path =
-          'https://vote-player.s3.ap-northeast-2.amazonaws.com/candidates_data.json';
-      // var path =
-      //     "${dotenv.env['candidateUrlPath']}?serviceKey=$serviceKey&pageNo=$pageNo&numOfRows=$numOfRows&sgId=$sgId&sgTypecode=$sgTypecode";
-      // if (sggName != null && sggName.isNotEmpty) path += "&sggName=$sggName";
-      // if (sdName != null && sdName.isNotEmpty) path += "&sdName=$sdName";
+      String? path = '${dotenv.env['API_PATH']}/candidates';
+
       final url = Uri.parse(
         path,
       );
       List<CandidateModel> candidateInstances = [];
 
       final response = await http.get(url);
-      final data = jsonDecode(utf8.decode(response.bodyBytes));
+      final statusCode = response.statusCode;
+
+      if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
+      final data = jsonDecode(response.body);
 
       for (var candidate in data) {
         candidateInstances.add(CandidateModel.fromJson(candidate));
@@ -56,19 +55,5 @@ class CandidatesService {
       logger.e(err);
       return [];
     }
-    // print('response: $response');
-    // try {
-    //   // http.Response data = jsonDecode(response.body);
-    //   Map<String, dynamic> data = jsonDecode(response.body);
-
-    //   // List<CandidateModel> result =
-    //   //     data.map((e) => CandidateModel.fromJson(e)).toList();
-    //   // candidates = result;
-
-    //   return result;
-    // } catch (err) {
-    //   logger.e(err);
-    //   return [];
-    // }
   }
 }
