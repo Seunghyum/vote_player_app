@@ -5,6 +5,7 @@ import 'package:vote_player_app/features/candidates/candidate_detail_screen.dart
 import 'package:vote_player_app/features/candidates/widgets/search_input.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/utils/keyboard.dart';
 import 'package:vote_player_app/utils/url.dart';
 
 class CandidatesScreen extends StatefulWidget {
@@ -57,14 +58,16 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     super.initState();
   }
 
-  void hideKeyboard() {
-    FocusScope.of(context).unfocus();
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: hideKeyboard,
+      onTap: () => hideKeyboard(context),
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
