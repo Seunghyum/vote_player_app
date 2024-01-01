@@ -91,59 +91,65 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     return GestureDetector(
       onTap: () => hideKeyboard(context),
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              elevation: 1,
-              title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Sizes.size10),
-                child: CandidateSearchInput(),
+        body: RefreshIndicator(
+          edgeOffset: 110,
+          onRefresh: () => Future.sync(
+            () => _pagingController.refresh(),
+          ),
+          child: CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                elevation: 1,
+                title: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Sizes.size10),
+                  child: CandidateSearchInput(),
+                ),
               ),
-            ),
-            PagedSliverList<int, CandidateModel>(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<CandidateModel>(
-                itemBuilder: (context, item, index) {
-                  final imagePath = getS3ImageUrl(
-                    BucketCategory.candidates,
-                    '${item.enName}.png',
-                  );
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.size10,
-                    ),
-                    child: ListTile(
-                      onTap: () => _onListTileTap(
-                        id: item.id,
-                        imagePath: imagePath,
-                        name: item.koName,
-                        partyName: item.partyName,
+              PagedSliverList<int, CandidateModel>(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<CandidateModel>(
+                  itemBuilder: (context, item, index) {
+                    final imagePath = getS3ImageUrl(
+                      BucketCategory.candidates,
+                      '${item.enName}.png',
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Sizes.size10,
                       ),
-                      leading: Hero(
-                        tag: item.id,
-                        child: CircleAvatar(
-                          foregroundImage: NetworkImage(imagePath),
+                      child: ListTile(
+                        onTap: () => _onListTileTap(
+                          id: item.id,
+                          imagePath: imagePath,
+                          name: item.koName,
+                          partyName: item.partyName,
+                        ),
+                        leading: Hero(
+                          tag: item.id,
+                          child: CircleAvatar(
+                            foregroundImage: NetworkImage(imagePath),
+                          ),
+                        ),
+                        title: Text(
+                          item.koName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          item.partyName,
+                        ),
+                        trailing: const Icon(
+                          Icons.chevron_right_sharp,
+                          size: Sizes.size32,
                         ),
                       ),
-                      title: Text(
-                        item.koName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text(
-                        item.partyName,
-                      ),
-                      trailing: const Icon(
-                        Icons.chevron_right_sharp,
-                        size: Sizes.size32,
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
