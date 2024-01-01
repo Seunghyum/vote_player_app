@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/features/region/region_screen.dart';
 import 'package:vote_player_app/features/main_navigation/widgets/nav_tab.dart';
-import 'package:vote_player_app/features/candidates/candidates_screen.dart';
+import 'package:vote_player_app/features/candidates/list/candidates_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});

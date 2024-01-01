@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:vote_player_app/constants/sizes.dart';
-import 'package:vote_player_app/features/candidates/candidate_detail_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/candidate_detail_screen.dart';
 
-import 'package:vote_player_app/features/candidates/widgets/search_input.dart';
+import 'package:vote_player_app/features/candidates/list/widgets/search_input.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
 import 'package:vote_player_app/utils/keyboard.dart';
