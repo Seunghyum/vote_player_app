@@ -56,10 +56,17 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     );
   }
 
+  dynamic _onInputChanged(String? text) async {
+    if (text == null) return;
+
+    _pagingController.itemList = await CandidatesService()
+        .getCandidates(currentPage: 0, pageCount: pageSize, koName: text);
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems =
-          await CandidatesService().getCandidates(pageKey, pageSize);
+      final newItems = await CandidatesService()
+          .getCandidates(currentPage: pageKey, pageCount: pageSize);
       final isLastPage = newItems.length < pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -98,11 +105,14 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
           ),
           child: CustomScrollView(
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 elevation: 1,
                 title: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Sizes.size10),
-                  child: CandidateSearchInput(),
+                  padding: const EdgeInsets.symmetric(horizontal: Sizes.size10),
+                  child: CandidateSearchInput(
+                    placeholder: "이름",
+                    onChanged: _onInputChanged,
+                  ),
                 ),
               ),
               PagedSliverList<int, CandidateModel>(
