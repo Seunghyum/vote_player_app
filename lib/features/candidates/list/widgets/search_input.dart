@@ -5,8 +5,12 @@ class CandidateSearchInput extends StatefulWidget {
   final Function(String)? onSubmitted;
   final String? placeholder;
 
-  const CandidateSearchInput(
-      {super.key, this.onChanged, this.onSubmitted, this.placeholder});
+  const CandidateSearchInput({
+    super.key,
+    this.onChanged,
+    this.onSubmitted,
+    this.placeholder,
+  });
 
   @override
   State<CandidateSearchInput> createState() => _CandidateSearchInputState();

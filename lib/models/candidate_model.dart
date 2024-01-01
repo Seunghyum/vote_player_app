@@ -1,14 +1,39 @@
 class CandidateModel {
   final String enName, koName, partyName, history, id;
-  final Map<String, dynamic> intro;
-
+  Map<String, String> intro = {
+    'electoralDistrict': '',
+    'affiliatedCommittee': '',
+    'electionCount': '',
+    'officePhone': '',
+    'officeRoom': '',
+    'memberHomepage': '',
+    'individualHomepage': '',
+    'email': '',
+    'aide': '',
+    'chiefOfStaff': '',
+    'secretary': '',
+    'officeGuide': '',
+  };
   CandidateModel.fromJson(Map<String, dynamic> json)
       : id = json['_id'],
         enName = json['enName'],
         koName = json['koName'],
         partyName = json['partyName'],
         history = json['history'],
-        intro = json['intro'];
+        intro = {
+          'electoralDistrict': json['intro']['electoralDistrict'],
+          'affiliatedCommittee': json['intro']['affiliatedCommittee'],
+          'electionCount': json['intro']['electionCount'],
+          'officePhone': json['intro']['officePhone'],
+          'officeRoom': json['intro']['officeRoom'],
+          'memberHomepage': json['intro']['memberHomepage'],
+          'individualHomepage': json['intro']['individualHomepage'],
+          'email': json['intro']['email'],
+          'aide': json['intro']['aide'],
+          'chiefOfStaff': json['intro']['chiefOfStaff'],
+          'secretary': json['intro']['secretary'],
+          'officeGuide': json['intro']['officeGuide'],
+        };
 }
 
 class IntroModel {

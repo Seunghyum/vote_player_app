@@ -25,8 +25,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   void _onListTileTap({
     required String id,
     required String imagePath,
-    required String name,
-    required String partyName,
+    required CandidateModel candidate,
   }) {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -35,10 +34,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
         reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) {
           return CandidateDetailScreen(
-            id: id,
             imagePath: imagePath,
-            name: name,
-            partyName: partyName,
+            candidate: candidate,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -131,8 +128,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         onTap: () => _onListTileTap(
                           id: item.id,
                           imagePath: imagePath,
-                          name: item.koName,
-                          partyName: item.partyName,
+                          candidate: item,
                         ),
                         leading: Hero(
                           tag: item.id,

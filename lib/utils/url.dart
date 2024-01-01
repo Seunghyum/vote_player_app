@@ -12,3 +12,10 @@ String getS3ImageUrl(
 }
 
 enum BucketCategory { candidates }
+
+String getNormalizedUrl(String link) {
+  Uri url = Uri.parse(link);
+  if (!url.isAbsolute) return 'https://$url';
+
+  return link;
+}
