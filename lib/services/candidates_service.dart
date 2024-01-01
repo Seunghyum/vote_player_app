@@ -24,9 +24,11 @@ class CandidatesService {
     this.cnddtId,
   });
 
-  Future<List<CandidateModel>> getCandidates() async {
+  Future<List<CandidateModel>> getCandidates(
+      int currentPage, int pageCount) async {
     try {
-      String? path = '${dotenv.env['API_PATH']}/candidates';
+      String? path =
+          '${dotenv.env['API_PATH']}/candidates?currentPage=$currentPage&pageCount=$pageCount';
 
       final url = Uri.parse(
         path,

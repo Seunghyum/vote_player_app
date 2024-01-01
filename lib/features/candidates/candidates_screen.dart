@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/candidate_detail_screen.dart';
 
@@ -16,7 +17,10 @@ class CandidatesScreen extends StatefulWidget {
 }
 
 class _CandidatesScreenState extends State<CandidatesScreen> {
-  late Future<List<CandidateModel>> _candidates;
+  final pageSize = 20;
+
+  final PagingController<int, CandidateModel> _pagingController =
+      PagingController(firstPageKey: 0);
 
   void _onListTileTap({
     required String id,
@@ -52,9 +56,27 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     );
   }
 
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final newItems =
+          await CandidatesService().getCandidates(pageKey, pageSize);
+      final isLastPage = newItems.length < pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
   @override
   void initState() {
-    _candidates = CandidatesService().getCandidates();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     super.initState();
   }
 
@@ -78,59 +100,48 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                 child: CandidateSearchInput(),
               ),
             ),
-            FutureBuilder(
-              future: _candidates,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SliverList.builder(
-                    itemCount: snapshot.data?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final candidate = snapshot.data![index];
-                      final imagePath = getS3ImageUrl(
-                        BucketCategory.candidates,
-                        '${candidate.enName}.png',
-                      );
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.size10,
-                        ),
-                        child: ListTile(
-                          onTap: () => _onListTileTap(
-                            id: candidate.id,
-                            imagePath: imagePath,
-                            name: candidate.koName,
-                            partyName: candidate.partyName,
-                          ),
-                          leading: Hero(
-                            tag: candidate.id,
-                            child: CircleAvatar(
-                              foregroundImage: NetworkImage(imagePath),
-                            ),
-                          ),
-                          title: Text(
-                            candidate.koName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Text(
-                            candidate.partyName,
-                          ),
-                          trailing: const Icon(
-                            Icons.chevron_right_sharp,
-                            size: Sizes.size32,
-                          ),
-                        ),
-                      );
-                    },
+            PagedSliverList<int, CandidateModel>(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<CandidateModel>(
+                itemBuilder: (context, item, index) {
+                  final imagePath = getS3ImageUrl(
+                    BucketCategory.candidates,
+                    '${item.enName}.png',
                   );
-                }
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              },
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size10,
+                    ),
+                    child: ListTile(
+                      onTap: () => _onListTileTap(
+                        id: item.id,
+                        imagePath: imagePath,
+                        name: item.koName,
+                        partyName: item.partyName,
+                      ),
+                      leading: Hero(
+                        tag: item.id,
+                        child: CircleAvatar(
+                          foregroundImage: NetworkImage(imagePath),
+                        ),
+                      ),
+                      title: Text(
+                        item.koName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        item.partyName,
+                      ),
+                      trailing: const Icon(
+                        Icons.chevron_right_sharp,
+                        size: Sizes.size32,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
