@@ -50,9 +50,14 @@ class CandidatesService {
     }
   }
 
-  Future<CandidateModel> getCandidateById(String id) async {
+  Future<CandidateModel> getCandidateById(
+    String id,
+    int? pageCount,
+    int? currentPage,
+  ) async {
     try {
-      String? path = '${dotenv.env['API_PATH']}/candidates/$id';
+      String? path =
+          '${dotenv.env['API_PATH']}/candidates/$id?pageCount=${pageCount ?? 15}&currentPage=${currentPage ?? 0}';
 
       final url = Uri.parse(
         path,
