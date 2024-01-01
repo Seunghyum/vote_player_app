@@ -40,16 +40,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             NavTab(
-              text: "지역",
-              icon: Icons.where_to_vote_outlined,
-              selectedIcon: Icons.where_to_vote,
+              text: "후보자",
+              icon: Icons.how_to_reg_outlined,
+              selectedIcon: Icons.how_to_reg,
               isSelected: _selectedIndex == 0,
               onTap: () => _onTap(0),
             ),
             NavTab(
-              text: "후보자",
-              icon: Icons.how_to_reg_outlined,
-              selectedIcon: Icons.how_to_reg,
+              text: "지역",
+              icon: Icons.where_to_vote_outlined,
+              selectedIcon: Icons.where_to_vote,
               isSelected: _selectedIndex == 1,
               onTap: () => _onTap(1),
             ),
