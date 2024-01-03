@@ -23,6 +23,10 @@ class CandidateDetailScreen extends StatelessWidget {
     }
   }
 
+  String renderEmptyString(String text) {
+    return text.isNotEmpty ? text : '-';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,45 +57,40 @@ class CandidateDetailScreen extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              Text(
-                '${candidate.intro['affiliatedCommittee']}',
-                style: const TextStyle(
-                  fontSize: Sizes.size14,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black54,
-                ),
-              ),
               Gaps.v10,
               ListTable(
                 data: [
                   {
+                    "key": '소속 위원회',
+                    "value":
+                        Text(renderEmptyString(candidate.affiliatedCommittee)),
+                  },
+                  {
                     "key": '선거구',
-                    "value": Text(candidate.intro['electoralDistrict']!),
+                    "value":
+                        Text(renderEmptyString(candidate.electoralDistrict)),
                   },
                   {
                     "key": '당선횟수',
                     "value": Text(
-                      candidate.intro['electionCount']!
-                          .replaceAll('\n\n', '\n'),
+                      renderEmptyString(candidate.electionCount),
                     ),
                   },
                   {
                     "key": '의원 홈페이지',
                     "value": GestureDetector(
-                      onTap: () =>
-                          _onLinkTap(candidate.intro['memberHomepage']!),
+                      onTap: () => _onLinkTap(candidate.memberHomepage),
                       child: Text(
-                        candidate.intro['memberHomepage']!,
+                        renderEmptyString(candidate.memberHomepage),
                       ),
                     ),
                   },
                   {
                     "key": '개별 홈페이지',
                     "value": GestureDetector(
-                      onTap: () =>
-                          _onLinkTap(candidate.intro['individualHomepage']!),
+                      onTap: () => _onLinkTap(candidate.individualHomepage),
                       child: Text(
-                        candidate.intro['individualHomepage']!,
+                        renderEmptyString(candidate.individualHomepage),
                       ),
                     ),
                   }

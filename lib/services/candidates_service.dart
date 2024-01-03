@@ -41,7 +41,6 @@ class CandidatesService {
 
       final response = await http.get(url);
       final statusCode = response.statusCode;
-
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
 

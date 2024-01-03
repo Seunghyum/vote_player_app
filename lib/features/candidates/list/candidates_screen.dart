@@ -64,6 +64,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     try {
       final newItems = await CandidatesService()
           .getCandidates(currentPage: pageKey, pageCount: pageSize);
+
       final isLastPage = newItems.length < pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
