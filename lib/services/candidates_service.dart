@@ -7,7 +7,7 @@ import 'package:vote_player_app/models/candidate_model.dart';
 var logger = Logger();
 
 class CandidatesService {
-  late List<CandidateModel> candidates;
+  late List<Candidate> candidates;
   late String? serviceKey = dotenv.env['serviceKey'];
   late int? pageNo = 1;
   late int? numOfRows = 15;
@@ -24,9 +24,9 @@ class CandidatesService {
     this.cnddtId,
   });
 
-  Future<List<CandidateModel>> getCandidates({
+  Future<List<Candidate>> getCandidates({
     int currentPage = 0,
-    int pageCount = 20,
+    int pageCount = 15,
     String? koName,
   }) async {
     try {
@@ -37,7 +37,7 @@ class CandidatesService {
       final url = Uri.parse(
         path,
       );
-      List<CandidateModel> candidateInstances = [];
+      List<Candidate> candidateInstances = [];
 
       final response = await http.get(url);
       final statusCode = response.statusCode;
@@ -45,7 +45,7 @@ class CandidatesService {
       final data = jsonDecode(response.body);
 
       for (var candidate in data) {
-        candidateInstances.add(CandidateModel.fromJson(candidate));
+        candidateInstances.add(Candidate.fromJson(candidate));
       }
 
       return candidateInstances;
@@ -55,7 +55,7 @@ class CandidatesService {
     }
   }
 
-  Future<CandidateModel> getCandidateById(
+  Future<Candidate> getCandidateById(
     String id,
   ) async {
     try {
@@ -71,7 +71,7 @@ class CandidatesService {
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
 
-      return CandidateModel.fromJson(data);
+      return Candidate.fromJson(data);
     } catch (err) {
       throw 'err';
     }

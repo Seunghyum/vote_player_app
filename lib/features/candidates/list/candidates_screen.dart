@@ -19,13 +19,13 @@ class CandidatesScreen extends StatefulWidget {
 class _CandidatesScreenState extends State<CandidatesScreen> {
   final pageSize = 20;
 
-  final PagingController<int, CandidateModel> _pagingController =
+  final PagingController<int, Candidate> _pagingController =
       PagingController(firstPageKey: 0);
 
   void _onListTileTap({
     required String id,
     required String imagePath,
-    required CandidateModel candidate,
+    required Candidate candidate,
   }) {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -113,9 +113,9 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                   ),
                 ),
               ),
-              PagedSliverList<int, CandidateModel>(
+              PagedSliverList<int, Candidate>(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<CandidateModel>(
+                builderDelegate: PagedChildBuilderDelegate<Candidate>(
                   itemBuilder: (context, item, index) {
                     final imagePath = getS3ImageUrl(
                       BucketCategory.candidates,
