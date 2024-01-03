@@ -35,64 +35,93 @@ class CandidateDetailScreen extends StatelessWidget {
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: Hero(
-                tag: candidate.id,
-                child: CircleAvatar(
-                  foregroundImage: NetworkImage(imagePath),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Hero(
+                        tag: candidate.id,
+                        child: CircleAvatar(
+                          foregroundImage: NetworkImage(imagePath),
+                        ),
+                      ),
+                    ),
+                    Gaps.v10,
+                    Text(
+                      candidate.koName,
+                      style: const TextStyle(
+                        fontSize: Sizes.size20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Gaps.v10,
-            Text(
-              candidate.koName,
-              style: const TextStyle(
-                fontSize: Sizes.size20,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
-            Gaps.v10,
-            ListTable(
-              data: [
-                {
-                  "key": '소속 위원회',
-                  "value":
-                      Text(renderEmptyString(candidate.affiliatedCommittee)),
-                },
-                {
-                  "key": '선거구',
-                  "value": Text(renderEmptyString(candidate.electoralDistrict)),
-                },
-                {
-                  "key": '당선횟수',
-                  "value": Text(
-                    renderEmptyString(candidate.electionCount),
+            SliverList.list(
+              children: [
+                Gaps.v10,
+                ListTable(
+                  data: [
+                    {
+                      "key": '소속 위원회',
+                      "value": Text(
+                        renderEmptyString(candidate.affiliatedCommittee),
+                      ),
+                    },
+                    {
+                      "key": '선거구',
+                      "value": Text(
+                        renderEmptyString(candidate.electoralDistrict),
+                      ),
+                    },
+                    {
+                      "key": '당선횟수',
+                      "value": Text(
+                        renderEmptyString(candidate.electionCount),
+                      ),
+                    },
+                    {
+                      "key": '의원 홈페이지',
+                      "value": GestureDetector(
+                        onTap: () => _onLinkTap(candidate.memberHomepage),
+                        child: Text(
+                          renderEmptyString(candidate.memberHomepage),
+                        ),
+                      ),
+                    },
+                    {
+                      "key": '개별 홈페이지',
+                      "value": GestureDetector(
+                        onTap: () => _onLinkTap(candidate.individualHomepage),
+                        child: Text(
+                          renderEmptyString(candidate.individualHomepage),
+                        ),
+                      ),
+                    }
+                  ],
+                ),
+                const Text(
+                  '대표 발의',
+                ),
+                const Divider(),
+                ...candidate.bills.map(
+                  (e) => ListTile(
+                    leading: Text(e.status),
+                    title: FractionallySizedBox(
+                        child: Text(
+                      e.name,
+                      style: const TextStyle(overflow: TextOverflow.ellipsis),
+                    )),
+                    subtitle: Text(e.committee),
                   ),
-                },
-                {
-                  "key": '의원 홈페이지',
-                  "value": GestureDetector(
-                    onTap: () => _onLinkTap(candidate.memberHomepage),
-                    child: Text(
-                      renderEmptyString(candidate.memberHomepage),
-                    ),
-                  ),
-                },
-                {
-                  "key": '개별 홈페이지',
-                  "value": GestureDetector(
-                    onTap: () => _onLinkTap(candidate.individualHomepage),
-                    child: Text(
-                      renderEmptyString(candidate.individualHomepage),
-                    ),
-                  ),
-                }
+                ),
               ],
             ),
           ],
