@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/region/region_screen.dart';
 import 'package:vote_player_app/features/main_navigation/widgets/nav_tab.dart';
 import 'package:vote_player_app/features/candidates/list/candidates_screen.dart';
@@ -35,6 +36,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
+        padding: const EdgeInsets.symmetric(horizontal: Sizes.size12),
         color: Theme.of(context).primaryColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
