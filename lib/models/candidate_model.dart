@@ -1,6 +1,4 @@
-import 'package:vote_player_app/models/common.dart';
-
-class Candidate<T extends Model> {
+class Candidate {
   final String enName, koName, partyName, history, id;
   String electoralDistrict = '';
   String affiliatedCommittee = '';
@@ -83,13 +81,4 @@ class Bill {
         date: DateTime.parse(json["date"]),
         status: json["status"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "nth": nth,
-        "name": name,
-        "proposers": proposers,
-        "committee": committee,
-        "date": date,
-        "status": status,
-      };
 }
