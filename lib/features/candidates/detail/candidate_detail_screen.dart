@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/utils/url.dart';
@@ -113,12 +113,15 @@ class CandidateDetailScreen extends StatelessWidget {
                 const Divider(),
                 ...candidate.bills.map(
                   (e) => ListTile(
-                    leading: Text(e.status),
+                    leading: BillStatusLabel(
+                      status: e.status,
+                    ),
                     title: FractionallySizedBox(
-                        child: Text(
-                      e.name,
-                      style: const TextStyle(overflow: TextOverflow.ellipsis),
-                    )),
+                      child: Text(
+                        e.name,
+                        style: const TextStyle(overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
                     subtitle: Text(e.committee),
                   ),
                 ),
