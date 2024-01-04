@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/billStatusPieChart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/utils/datetime.dart';
@@ -109,10 +109,16 @@ class CandidateDetailScreen extends StatelessWidget {
                     }
                   ],
                 ),
+                Gaps.v24,
                 const Text(
                   '대표 발의',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Sizes.size18,
+                  ),
                 ),
                 const Divider(),
+                const BillStatusPieChart(),
                 ...candidate.bills.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(
