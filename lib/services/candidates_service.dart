@@ -24,7 +24,7 @@ class CandidatesService {
     this.cnddtId,
   });
 
-  Future<List<Candidate>> getCandidates({
+  Future<CandidateResponse> getCandidates({
     int currentPage = 0,
     int pageCount = 15,
     String? koName,
@@ -37,21 +37,25 @@ class CandidatesService {
       final url = Uri.parse(
         path,
       );
-      List<Candidate> candidateInstances = [];
+      CandidateResponse candidateResponse =
+          CandidateResponse(result: [], summary: CandidatesSummary(count: 0));
 
       final response = await http.get(url);
       final statusCode = response.statusCode;
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
 
-      for (var candidate in data) {
-        candidateInstances.add(Candidate.fromJson(candidate));
+      candidateResponse.summary =
+          CandidatesSummary(count: data['summary']['count']);
+
+      for (var candidate in data['result']) {
+        candidateResponse.result.add(Candidate.fromJson(candidate));
       }
 
-      return candidateInstances;
+      return candidateResponse;
     } catch (err) {
       logger.e(err);
-      return [];
+      return throw '데이터를 정상적으로 불러오지 못했습니다';
     }
   }
 
@@ -76,4 +80,17 @@ class CandidatesService {
       throw 'err';
     }
   }
+}
+
+class CandidateResponse {
+  List<Candidate> result;
+  CandidatesSummary summary;
+
+  CandidateResponse({required this.result, required this.summary});
+}
+
+class CandidatesSummary {
+  int count;
+
+  CandidatesSummary({required this.count});
 }

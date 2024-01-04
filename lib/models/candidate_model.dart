@@ -52,7 +52,9 @@ class Candidate {
         history: json["history"],
         koName: json["koName"],
         partyName: json["partyName"],
-        bills: List<Bill>.from(json["bills"].map((x) => Bill.fromJson(x))),
+        bills: List<Bill>.from(
+          json["bills"].map((x) => Bill.fromJson(x)),
+        ),
       );
 }
 

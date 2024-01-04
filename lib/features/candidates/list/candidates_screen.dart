@@ -18,6 +18,7 @@ class CandidatesScreen extends StatefulWidget {
 
 class _CandidatesScreenState extends State<CandidatesScreen> {
   final pageSize = 20;
+  CandidatesSummary? summary;
 
   final PagingController<int, Candidate> _pagingController =
       PagingController(firstPageKey: 0);
@@ -56,14 +57,20 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   dynamic _onInputChanged(String? text) async {
     if (text == null) return;
 
-    _pagingController.itemList = await CandidatesService()
-        .getCandidates(currentPage: 0, pageCount: pageSize, koName: text);
+    _pagingController.itemList = (await CandidatesService()
+            .getCandidates(currentPage: 0, pageCount: pageSize, koName: text))
+        .result;
   }
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await CandidatesService()
-          .getCandidates(currentPage: pageKey, pageCount: pageSize);
+      final response = (await CandidatesService()
+          .getCandidates(currentPage: pageKey, pageCount: pageSize));
+      final newItems = response.result;
+
+      setState(() {
+        summary = response.summary;
+      });
 
       final isLastPage = newItems.length < pageSize;
       if (isLastPage) {
@@ -110,6 +117,15 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                   child: CandidateSearchInput(
                     placeholder: "이름",
                     onChanged: _onInputChanged,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Sizes.size32),
+                  child: Text(
+                    '${summary?.count}개의 결과',
+                    textAlign: TextAlign.end,
                   ),
                 ),
               ),
