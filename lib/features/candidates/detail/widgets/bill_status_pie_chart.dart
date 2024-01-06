@@ -2,7 +2,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vote_player_app/constants/sizes.dart';
 
 class BillStatusPieChart extends StatefulWidget {
   const BillStatusPieChart({super.key});
