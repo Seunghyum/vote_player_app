@@ -160,7 +160,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                           ),
                         ),
                         subtitle: Text(
-                          item.partyName,
+                          item.electoralDistrict,
                         ),
                         trailing: const Icon(
                           Icons.chevron_right_sharp,
