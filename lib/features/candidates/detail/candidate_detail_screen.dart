@@ -30,6 +30,10 @@ class CandidateDetailScreen extends StatelessWidget {
     return text.isNotEmpty ? text : '-';
   }
 
+  int filterStatus(String status) {
+    return candidate.bills.where((element) => element.status == status).length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +122,12 @@ class CandidateDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                const BillStatusPieChart(),
+                BillStatusPieChart(
+                  passed: filterStatus('가결'),
+                  pending: filterStatus('계류'),
+                  amendmentPassed: filterStatus('수정안반영폐기'),
+                  alternativePassed: filterStatus('대안반영폐기'),
+                ),
                 ...candidate.bills.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(
