@@ -99,6 +99,7 @@ class CandidateDetailScreen extends StatelessWidget {
                         onTap: () => _onLinkTap(candidate.memberHomepage),
                         child: Text(
                           renderEmptyString(candidate.memberHomepage),
+                          style: TextStyle(color: Colors.blue.shade700),
                         ),
                       ),
                     },
@@ -108,6 +109,7 @@ class CandidateDetailScreen extends StatelessWidget {
                         onTap: () => _onLinkTap(candidate.individualHomepage),
                         child: Text(
                           renderEmptyString(candidate.individualHomepage),
+                          style: TextStyle(color: Colors.blue.shade700),
                         ),
                       ),
                     }
