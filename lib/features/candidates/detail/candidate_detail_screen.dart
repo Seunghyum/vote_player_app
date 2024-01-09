@@ -149,7 +149,14 @@ class CandidateDetailScreen extends StatelessWidget {
                         Text(e.committee),
                         Row(
                           children: [
-                            Text('${getyyyyMMdd(e.date)}~'),
+                            Text(
+                              e.nth,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Text(' ${getyyyyMMdd(e.date)}~'),
                           ],
                         ),
                       ],
