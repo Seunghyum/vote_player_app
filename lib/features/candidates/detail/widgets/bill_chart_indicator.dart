@@ -6,7 +6,7 @@ class BillChartIndicator extends StatelessWidget {
     required this.color,
     required this.text,
     required this.isSquare,
-    this.size = 16,
+    this.size = 13,
     this.textColor,
   });
   final Color color;
@@ -33,7 +33,7 @@ class BillChartIndicator extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: size,
             fontWeight: FontWeight.bold,
             color: textColor,
           ),

@@ -7,6 +7,7 @@ import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_d
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/utils/datetime.dart';
+import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 import 'package:vote_player_app/utils/url.dart';
 
 class CandidateDetailScreen extends StatelessWidget {
@@ -125,15 +126,20 @@ class CandidateDetailScreen extends StatelessWidget {
                 ),
                 const Divider(),
                 BillStatusDonutChart(
-                  passed: filterStatus('가결'),
-                  pending: filterStatus('계류'),
-                  amendmentPassed: filterStatus('수정안반영폐기'),
-                  alternativePassed: filterStatus('대안반영폐기'),
+                  passed: filterStatus(BillStatusEnum.passed.koreanName),
+                  pending: filterStatus(BillStatusEnum.pending.koreanName),
+                  amendmentPassed:
+                      filterStatus(BillStatusEnum.amendmentPassed.koreanName),
+                  alternativePassed:
+                      filterStatus(BillStatusEnum.alternativePassed.koreanName),
+                  termExpiration:
+                      filterStatus(BillStatusEnum.termExpiration.koreanName),
+                  dispose: filterStatus(BillStatusEnum.dispose.koreanName),
                 ),
                 ...candidate.bills.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(
-                      status: e.status,
+                      status: getBillStatus(e.status),
                     ),
                     title: FractionallySizedBox(
                       child: Text(
