@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
-import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_pie_chart.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/utils/datetime.dart';
@@ -124,7 +124,7 @@ class CandidateDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                BillStatusPieChart(
+                BillStatusDonutChart(
                   passed: filterStatus('가결'),
                   pending: filterStatus('계류'),
                   amendmentPassed: filterStatus('수정안반영폐기'),
