@@ -117,12 +117,29 @@ class CandidateDetailScreen extends StatelessWidget {
                   ],
                 ),
                 Gaps.v24,
-                const Text(
-                  '대표 발의',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: Sizes.size18,
-                  ),
+                Row(
+                  children: [
+                    const Text(
+                      '대표 발의',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizes.size18,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: Sizes.size8,
+                    ),
+                    Opacity(
+                      opacity: 0.6,
+                      child: Text(
+                        '총 ${candidate.bills.length}개 법안',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: Sizes.size14,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const Divider(),
                 BillStatusDonutChart(
@@ -135,6 +152,8 @@ class CandidateDetailScreen extends StatelessWidget {
                   termExpiration:
                       filterStatus(BillStatusEnum.termExpiration.koreanName),
                   dispose: filterStatus(BillStatusEnum.dispose.koreanName),
+                  withdrawal:
+                      filterStatus(BillStatusEnum.withdrawal.koreanName),
                 ),
                 ...candidate.bills.map(
                   (e) => ListTile(

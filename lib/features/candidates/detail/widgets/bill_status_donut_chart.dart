@@ -12,6 +12,8 @@ class BillStatusDonutChart extends StatefulWidget {
   final int? alternativePassed;
   final int? termExpiration;
   final int? dispose;
+  final int? withdrawal;
+  final int? rejected;
   const BillStatusDonutChart({
     super.key,
     this.pending,
@@ -20,6 +22,8 @@ class BillStatusDonutChart extends StatefulWidget {
     this.alternativePassed,
     this.termExpiration,
     this.dispose,
+    this.withdrawal,
+    this.rejected,
   });
 
   @override
@@ -50,6 +54,8 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
                     alternativePassed: widget.alternativePassed ?? 0,
                     termExpiration: widget.termExpiration ?? 0,
                     dispose: widget.dispose ?? 0,
+                    withdrawal: widget.withdrawal ?? 0,
+                    rejected: widget.rejected ?? 0,
                   ),
                 ),
               ),
@@ -98,6 +104,18 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
                 text: BillStatusEnum.dispose.koreanName,
                 isSquare: true,
               ),
+              BillChartIndicator(
+                color: getColorByBillStatus(BillStatusEnum.withdrawal)
+                    .backgroundColor,
+                text: BillStatusEnum.withdrawal.koreanName,
+                isSquare: true,
+              ),
+              BillChartIndicator(
+                color: getColorByBillStatus(BillStatusEnum.rejected)
+                    .backgroundColor,
+                text: BillStatusEnum.rejected.koreanName,
+                isSquare: true,
+              ),
               const SizedBox(
                 height: 60,
               ),
@@ -118,19 +136,28 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
     required int alternativePassed,
     required int termExpiration,
     required int dispose,
+    required int withdrawal,
+    required int rejected,
   }) {
-    return List.generate(6, (i) {
+    return List.generate(8, (i) {
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       final pending = widget.pending ?? 0;
       final passed = widget.passed ?? 0;
       final amendmentPassed = widget.amendmentPassed ?? 0;
       final alternativePassed = widget.alternativePassed ?? 0;
+      final termExpiration = widget.termExpiration ?? 0;
       final dispose = widget.dispose ?? 0;
+      final withdrawal = widget.withdrawal ?? 0;
+      final rejected = widget.rejected ?? 0;
       final sum = pending + passed + amendmentPassed + alternativePassed;
       final pendingPer = (pending / sum * 100).round();
       final passedPer = (passed / sum * 100).round();
       final amendmentPassedPer = (amendmentPassed / sum * 100).round();
       final alternativePassedPer = (alternativePassed / sum * 100).round();
+      final termExpirationPer = (termExpiration / sum * 100).round();
+      final disposePer = (dispose / sum * 100).round();
+      final withdrawalPer = (withdrawal / sum * 100).round();
+      final rejectedPer = (rejected / sum * 100).round();
 
       const titlePositionPercentageOffset = 0.6;
       const radius = 70.0;
@@ -140,7 +167,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
           return PieChartSectionData(
             color: getColorByBillStatus(BillStatusEnum.pending).backgroundColor,
             value: pendingPer.toDouble(),
-            title: '$pendingPer%',
+            title: '$pendingPer%\n($pending)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(
@@ -155,7 +182,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
           return PieChartSectionData(
             color: getColorByBillStatus(BillStatusEnum.passed).backgroundColor,
             value: passedPer.toDouble(),
-            title: '$passedPer%',
+            title: '$passedPer%\n($passed)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(
@@ -171,7 +198,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
             color: getColorByBillStatus(BillStatusEnum.amendmentPassed)
                 .backgroundColor,
             value: amendmentPassedPer.toDouble(),
-            title: '${amendmentPassedPer.toInt()}%',
+            title: '${amendmentPassedPer.toInt()}%\n($amendmentPassed)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(
@@ -186,7 +213,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
             color: getColorByBillStatus(BillStatusEnum.alternativePassed)
                 .backgroundColor,
             value: alternativePassedPer.toDouble(),
-            title: '${alternativePassedPer.toInt()}%',
+            title: '${alternativePassedPer.toInt()}%\n($alternativePassed)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(
@@ -201,8 +228,8 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
           return PieChartSectionData(
             color: getColorByBillStatus(BillStatusEnum.termExpiration)
                 .backgroundColor,
-            value: termExpiration.toDouble(),
-            title: '${termExpiration.toInt()}%',
+            value: termExpirationPer.toDouble(),
+            title: '${termExpirationPer.toInt()}%\n($termExpiration)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(
@@ -215,8 +242,38 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
         case 5:
           return PieChartSectionData(
             color: getColorByBillStatus(BillStatusEnum.dispose).backgroundColor,
-            value: dispose.toDouble(),
-            title: '${dispose.toInt()}%',
+            value: disposePer.toDouble(),
+            title: '${disposePer.toInt()}%\n($dispose)',
+            radius: radius,
+            titlePositionPercentageOffset: titlePositionPercentageOffset,
+            titleStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xffffffff),
+              shadows: shadows,
+            ),
+          );
+        case 6:
+          return PieChartSectionData(
+            color:
+                getColorByBillStatus(BillStatusEnum.withdrawal).backgroundColor,
+            value: withdrawalPer.toDouble(),
+            title: '${withdrawalPer.toInt()}%\n($withdrawal)',
+            radius: radius,
+            titlePositionPercentageOffset: titlePositionPercentageOffset,
+            titleStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xffffffff),
+              shadows: shadows,
+            ),
+          );
+        case 7:
+          return PieChartSectionData(
+            color:
+                getColorByBillStatus(BillStatusEnum.rejected).backgroundColor,
+            value: rejectedPer.toDouble(),
+            title: '${rejectedPer.toInt()}%\n($rejected)',
             radius: radius,
             titlePositionPercentageOffset: titlePositionPercentageOffset,
             titleStyle: const TextStyle(

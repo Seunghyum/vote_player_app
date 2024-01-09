@@ -16,6 +16,12 @@ BillStatusEnum getBillStatus(String status) {
     return BillStatusEnum.termExpiration;
   else if (status == BillStatusEnum.dispose.koreanName)
     return BillStatusEnum.dispose;
+  else if (status == BillStatusEnum.dispose.koreanName)
+    return BillStatusEnum.dispose;
+  else if (status == BillStatusEnum.withdrawal.koreanName)
+    return BillStatusEnum.withdrawal;
+  else if (status == BillStatusEnum.rejected.koreanName)
+    return BillStatusEnum.rejected;
   throw 'BillStatus에 예외가 있습니다 $status';
 }
 
@@ -25,7 +31,9 @@ enum BillStatusEnum {
   amendmentPassed('수정안반영폐기', 'amendmentPassed'),
   alternativePassed('대안반영폐기', 'alternativePassed'),
   termExpiration('임기만료폐기', 'termExpiration'),
-  dispose('폐기', 'dispose');
+  dispose('폐기', 'dispose'),
+  withdrawal('철회', 'withdrawal'),
+  rejected('부결', 'rejected');
 
   const BillStatusEnum(
     this.koreanName,
@@ -72,20 +80,32 @@ ReturnColorObject getColorByBillStatus(status) {
       );
     case BillStatusEnum.pending:
       return ReturnColorObject(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.grey.shade300,
         textColor: Colors.white,
       );
     case BillStatusEnum.termExpiration:
       return ReturnColorObject(
-        backgroundColor: Colors.grey.shade700,
+        backgroundColor: Colors.grey.shade500,
         text: '임기\n만료',
         fontSize: Sizes.size12,
         textColor: Colors.white,
       );
     case BillStatusEnum.dispose:
       return ReturnColorObject(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: Colors.grey.shade700,
         text: '폐기',
+        textColor: Colors.white,
+      );
+    case BillStatusEnum.withdrawal:
+      return ReturnColorObject(
+        backgroundColor: Colors.red.shade500,
+        text: '철회',
+        textColor: Colors.white,
+      );
+    case BillStatusEnum.rejected:
+      return ReturnColorObject(
+        backgroundColor: Colors.red.shade700,
+        text: '부결',
         textColor: Colors.white,
       );
     default:
