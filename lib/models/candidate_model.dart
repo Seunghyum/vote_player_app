@@ -76,11 +76,11 @@ class Bill {
   });
 
   factory Bill.fromJson(Map<String, dynamic> json) => Bill(
-        nth: json["nth"],
-        name: json["name"],
-        proposers: json["proposers"],
-        committee: json["committee"],
-        date: DateTime.parse(json["date"]),
-        status: json["status"],
+        nth: json["nth"] ?? '',
+        name: json["name"] ?? '',
+        proposers: json["proposers"] ?? '',
+        committee: json["committee"] ?? '',
+        date: DateTime.parse(json["date"] ?? ''),
+        status: json["status"] ?? '',
       );
 }
