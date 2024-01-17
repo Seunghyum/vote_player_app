@@ -155,6 +155,58 @@ class CandidateDetailScreen extends StatelessWidget {
                   withdrawal:
                       filterStatus(BillStatusEnum.withdrawal.koreanName),
                 ),
+                const Text(
+                  '대표 발의 소속 위원회',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Sizes.size18,
+                  ),
+                ),
+                const Divider(),
+                ...candidate.billsStatistics
+                    .where((element) => element.name.isNotEmpty)
+                    .map(
+                      (bs) => ListTile(
+                        title: Row(
+                          children: [
+                            Badge(
+                              isLabelVisible: candidate.affiliatedCommittee
+                                  .contains(bs.name),
+                              label: const Text(
+                                '소속',
+                                // style: TextStyle(fontSize: Sizes.size14),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              offset: const Offset(20, 3.5),
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                bs.name,
+                                style: const TextStyle(fontSize: Sizes.size16),
+                              ),
+                            ),
+                          ],
+                        ),
+                        leading: SizedBox(
+                          width: Sizes.size40,
+                          child: Text(
+                            '${bs.value}회',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: Sizes.size16),
+                          ),
+                        ),
+                      ),
+                    ),
+                Gaps.v24,
+                const Text(
+                  '대표 발의 상세',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Sizes.size18,
+                  ),
+                ),
+                const Divider(),
                 ...candidate.bills.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(
