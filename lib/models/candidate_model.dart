@@ -13,6 +13,7 @@ class Candidate {
   String secretary = '';
   String officeGuide = '';
   List<Bill> bills;
+  List<BillsStatisticsItem> billsStatistics;
 
   Candidate({
     required this.id,
@@ -33,6 +34,7 @@ class Candidate {
     required this.koName,
     required this.partyName,
     required this.bills,
+    required this.billsStatistics,
   });
   factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
         id: json["_id"],
@@ -54,6 +56,9 @@ class Candidate {
         partyName: json["partyName"],
         bills: List<Bill>.from(
           json["bills"].map((x) => Bill.fromJson(x)),
+        ),
+        billsStatistics: List<BillsStatisticsItem>.from(
+          json['billsStatistics'].map((x) => BillsStatisticsItem.fromJson(x)),
         ),
       );
 }
@@ -82,5 +87,21 @@ class Bill {
         committee: json["committee"] ?? '',
         date: DateTime.parse(json["date"] ?? ''),
         status: json["status"] ?? '',
+      );
+}
+
+class BillsStatisticsItem {
+  String name;
+  int value;
+
+  BillsStatisticsItem({
+    required this.name,
+    required this.value,
+  });
+
+  factory BillsStatisticsItem.fromJson(Map<String, dynamic> json) =>
+      BillsStatisticsItem(
+        name: json["name"] ?? '',
+        value: json["value"] ?? 0,
       );
 }
