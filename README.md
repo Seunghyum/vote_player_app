@@ -7,4 +7,5 @@
 ![스크린샷 2024-01-09 오후 6 12 19](https://github.com/Seunghyum/vote_player_app/assets/13027315/c56e5c68-c8df-4c35-94e1-d916d3fceeec)
 ![스크린샷 2024-01-10 오전 7 19 25](https://github.com/Seunghyum/vote_player_app/assets/13027315/6c07cc5f-9785-4278-a726-6f29423be4fc)
 ![스크린샷 2024-01-10 오전 7 18 01](https://github.com/Seunghyum/vote_player_app/assets/13027315/3b45ecab-ea54-452f-bdad-5d76bee5aaa7)
-<img width="351" alt="스크린샷 2024-01-19 오후 12 55 10" src="https://github.com/Seunghyum/vote_player_app/assets/13027315/a43bf7c5-ab41-4f17-ba0d-516a6b14ebdf">
+<img width="350" alt="스크린샷 2024-01-19 오후 1 03 55" src="https://github.com/Seunghyum/vote_player_app/assets/13027315/24ea63cb-94f6-4779-85b8-ed4401cee914">
+
