@@ -156,7 +156,7 @@ class CandidateDetailScreen extends StatelessWidget {
                       filterStatus(BillStatusEnum.withdrawal.koreanName),
                 ),
                 const Text(
-                  '대표 발의 소속 위원회',
+                  '소속 위원회별 대표 발의안 제출 횟수',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: Sizes.size18,
@@ -189,7 +189,7 @@ class CandidateDetailScreen extends StatelessWidget {
                           ],
                         ),
                         leading: SizedBox(
-                          width: Sizes.size40,
+                          width: Sizes.size56,
                           child: Text(
                             '${bs.value}회',
                             textAlign: TextAlign.center,
