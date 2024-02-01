@@ -34,7 +34,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1,
+      aspectRatio: 1.2,
       child: Row(
         children: [
           Expanded(
