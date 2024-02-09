@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
@@ -20,6 +21,10 @@ class _BillsScreenState extends State<BillsScreen> {
     return widget.candidate.bills
         .where((element) => element.status == status)
         .length;
+  }
+
+  void _onFilterTap(String value) {
+    print(value);
   }
 
   @override
@@ -63,6 +68,27 @@ class _BillsScreenState extends State<BillsScreen> {
                   ),
                 ),
                 const Divider(),
+                ListFilter(
+                  items: [
+                    ListFilterItem(
+                      name: '전체',
+                      value: 'all',
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      onTap: (value) => _onFilterTap('all'),
+                    ),
+                    ...BillStatusEnum.values.map(
+                      (v) => ListFilterItem(
+                        name: v.koreanName,
+                        value: v.englishName,
+                        backgroundColor:
+                            getColorByBillStatus(getBillStatus(v.koreanName))
+                                .backgroundColor,
+                        onTap: (value) => _onFilterTap(value),
+                      ),
+                    ),
+                  ],
+                ),
                 ...widget.candidate.bills.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(

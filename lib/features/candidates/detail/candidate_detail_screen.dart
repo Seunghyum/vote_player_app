@@ -3,11 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
-import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/utils/datetime.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 import 'package:vote_player_app/utils/url.dart';
 

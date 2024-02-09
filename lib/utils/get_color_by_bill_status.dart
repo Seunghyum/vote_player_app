@@ -4,24 +4,25 @@ import 'package:vote_player_app/constants/sizes.dart';
 BillStatusEnum getBillStatus(String status) {
   if (status == BillStatusEnum.passed.koreanName) {
     return BillStatusEnum.pending;
-  } else if (status == BillStatusEnum.pending.koreanName)
+  } else if (status == BillStatusEnum.pending.koreanName) {
     return BillStatusEnum.pending;
-  else if (status == BillStatusEnum.alternativePassed.koreanName)
+  } else if (status == BillStatusEnum.alternativePassed.koreanName) {
     return BillStatusEnum.alternativePassed;
-  else if (status == BillStatusEnum.amendmentPassed.koreanName)
+  } else if (status == BillStatusEnum.amendmentPassed.koreanName) {
     return BillStatusEnum.amendmentPassed;
-  else if (status == BillStatusEnum.termExpiration.koreanName)
+  } else if (status == BillStatusEnum.termExpiration.koreanName) {
     return BillStatusEnum.termExpiration;
-  else if (status == BillStatusEnum.termExpiration.koreanName)
+  } else if (status == BillStatusEnum.termExpiration.koreanName) {
     return BillStatusEnum.termExpiration;
-  else if (status == BillStatusEnum.dispose.koreanName)
+  } else if (status == BillStatusEnum.dispose.koreanName) {
     return BillStatusEnum.dispose;
-  else if (status == BillStatusEnum.dispose.koreanName)
+  } else if (status == BillStatusEnum.dispose.koreanName) {
     return BillStatusEnum.dispose;
-  else if (status == BillStatusEnum.withdrawal.koreanName)
+  } else if (status == BillStatusEnum.withdrawal.koreanName) {
     return BillStatusEnum.withdrawal;
-  else if (status == BillStatusEnum.rejected.koreanName)
+  } else if (status == BillStatusEnum.rejected.koreanName) {
     return BillStatusEnum.rejected;
+  }
   throw 'BillStatus에 예외가 있습니다 $status';
 }
 
@@ -57,7 +58,7 @@ class ReturnColorObject {
   });
 }
 
-ReturnColorObject getColorByBillStatus(status) {
+ReturnColorObject getColorByBillStatus(BillStatusEnum status) {
   switch (status) {
     case BillStatusEnum.passed:
       return ReturnColorObject(
