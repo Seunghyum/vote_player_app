@@ -5,6 +5,7 @@ import 'package:vote_player_app/features/main_navigation/widgets/nav_tab.dart';
 import 'package:vote_player_app/features/candidates/list/candidates_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
+  static String routeName = '/';
   const MainNavigationScreen({super.key});
 
   @override

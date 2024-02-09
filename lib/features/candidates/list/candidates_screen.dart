@@ -10,6 +10,7 @@ import 'package:vote_player_app/utils/keyboard.dart';
 import 'package:vote_player_app/utils/url.dart';
 
 class CandidatesScreen extends StatefulWidget {
+  static String routeName = '/candidates';
   const CandidatesScreen({super.key});
 
   @override
