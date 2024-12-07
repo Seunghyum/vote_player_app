@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
@@ -17,14 +18,34 @@ class BillsScreen extends StatefulWidget {
 }
 
 class _BillsScreenState extends State<BillsScreen> {
+  BillStatusEnum filterValue = BillStatusEnum.all;
+  Iterable<Bill> filteredList = [];
   int filterStatus(String status) {
     return widget.candidate.bills
         .where((element) => element.status == status)
         .length;
   }
 
-  void _onFilterTap(String value) {
-    print(value);
+  void _onFilterTap(BillStatusEnum value) {
+    setState(() {
+      filterValue = value;
+
+      if (value == BillStatusEnum.all) {
+        filteredList = widget.candidate.bills;
+      } else {
+        filteredList = widget.candidate.bills.where((e) {
+          return getBillStatus(e.status).englishName == value.englishName;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      filteredList = widget.candidate.bills;
+    });
+    super.initState();
   }
 
   @override
@@ -68,28 +89,25 @@ class _BillsScreenState extends State<BillsScreen> {
                   ),
                 ),
                 const Divider(),
-                ListFilter(
-                  items: [
-                    ListFilterItem(
-                      name: '전체',
-                      value: 'all',
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      onTap: (value) => _onFilterTap('all'),
-                    ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ListFilter(items: [
                     ...BillStatusEnum.values.map(
                       (v) => ListFilterItem(
                         name: v.koreanName,
-                        value: v.englishName,
+                        value: getBillStatus(v.englishName),
                         backgroundColor:
-                            getColorByBillStatus(getBillStatus(v.koreanName))
+                            getColorByBillStatus(getBillStatus(v.englishName))
                                 .backgroundColor,
-                        onTap: (value) => _onFilterTap(value),
+                        onTap: (value) {
+                          _onFilterTap(value);
+                        },
+                        active: filterValue.englishName == v.englishName,
                       ),
-                    ),
-                  ],
+                    )
+                  ]),
                 ),
-                ...widget.candidate.bills.map(
+                ...filteredList.map(
                   (e) => ListTile(
                     leading: BillStatusLabel(
                       status: getBillStatus(e.status),

@@ -150,7 +150,43 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
                           style: TextStyle(color: Colors.blue.shade700),
                         ),
                       ),
-                    }
+                    },
+                    {
+                      "key": '사무실전화',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.officePhone),
+                      ),
+                    },
+                    {
+                      "key": 'Email',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.email),
+                      ),
+                    },
+                    {
+                      "key": '보좌관',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.aide),
+                      ),
+                    },
+                    {
+                      "key": '선임비서관',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.chiefOfStaff),
+                      ),
+                    },
+                    {
+                      "key": '비서관',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.secretary),
+                      ),
+                    },
+                    {
+                      "key": '의원실안내',
+                      "value": Text(
+                        renderEmptyString(widget.candidate.officeGuide),
+                      ),
+                    },
                   ],
                 ),
                 Gaps.v24,
