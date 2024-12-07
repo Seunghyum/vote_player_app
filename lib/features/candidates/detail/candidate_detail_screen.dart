@@ -192,69 +192,71 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> {
                 Gaps.v24,
                 GestureDetector(
                   onTap: _onBillsTap,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            '대표 발의',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.size18,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: Sizes.size8,
-                          ),
-                          Opacity(
-                            opacity: 0.6,
-                            child: Text(
-                              '총 ${widget.candidate.bills.length}개 법안',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: Sizes.size14,
+                  child: AbsorbPointer(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              '대표 발의',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizes.size18,
                               ),
                             ),
-                          ),
-                          const Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Opacity(
-                                opacity: 0.6,
-                                child: Icon(
-                                  Icons.chevron_right_sharp,
-                                  size: Sizes.size32,
+                            const SizedBox(
+                              width: Sizes.size8,
+                            ),
+                            Opacity(
+                              opacity: 0.6,
+                              child: Text(
+                                '총 ${widget.candidate.bills.length}개 법안',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: Sizes.size14,
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Divider(),
-                      Hero(
-                        tag: '대표 발의',
-                        child: BillStatusDonutChart(
-                          passed:
-                              filterStatus(BillStatusEnum.passed.koreanName),
-                          pending:
-                              filterStatus(BillStatusEnum.pending.koreanName),
-                          amendmentPassed: filterStatus(
-                            BillStatusEnum.amendmentPassed.koreanName,
-                          ),
-                          alternativePassed: filterStatus(
-                            BillStatusEnum.alternativePassed.koreanName,
-                          ),
-                          termExpiration: filterStatus(
-                            BillStatusEnum.termExpiration.koreanName,
-                          ),
-                          dispose:
-                              filterStatus(BillStatusEnum.dispose.koreanName),
-                          withdrawal: filterStatus(
-                            BillStatusEnum.withdrawal.koreanName,
+                            const Expanded(
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Opacity(
+                                  opacity: 0.6,
+                                  child: Icon(
+                                    Icons.chevron_right_sharp,
+                                    size: Sizes.size32,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Hero(
+                          tag: '대표 발의',
+                          child: BillStatusDonutChart(
+                            passed:
+                                filterStatus(BillStatusEnum.passed.koreanName),
+                            pending:
+                                filterStatus(BillStatusEnum.pending.koreanName),
+                            amendmentPassed: filterStatus(
+                              BillStatusEnum.amendmentPassed.koreanName,
+                            ),
+                            alternativePassed: filterStatus(
+                              BillStatusEnum.alternativePassed.koreanName,
+                            ),
+                            termExpiration: filterStatus(
+                              BillStatusEnum.termExpiration.koreanName,
+                            ),
+                            dispose:
+                                filterStatus(BillStatusEnum.dispose.koreanName),
+                            withdrawal: filterStatus(
+                              BillStatusEnum.withdrawal.koreanName,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const Text(
