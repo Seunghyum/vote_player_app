@@ -18,7 +18,7 @@ class BillsScreen extends StatefulWidget {
 }
 
 class _BillsScreenState extends State<BillsScreen> {
-  BillStatusEnum filterValue = BillStatusEnum.all;
+  BillStatusEnum filterValue = BillStatusEnum.passed;
   Iterable<Bill> filteredList = [];
   int filterStatus(String status) {
     return widget.candidate.bills
@@ -43,7 +43,9 @@ class _BillsScreenState extends State<BillsScreen> {
   @override
   void initState() {
     setState(() {
-      filteredList = widget.candidate.bills;
+      filteredList = widget.candidate.bills.where((e) {
+        return getBillStatus(e.status) == filterValue;
+      });
     });
     super.initState();
   }
