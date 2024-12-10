@@ -327,7 +327,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                 ),
               ),
               SliverPersistentHeader(
-                delegate: PersistentTabBar(),
+                delegate: PersistentTabBar(candidate: widget.candidate),
                 pinned: true,
               ),
             ];
