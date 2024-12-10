@@ -35,11 +35,11 @@ BillStatusEnum getBillStatus(String status) {
 
 enum BillStatusEnum {
   all('전체', 'all'),
-  pending('계류', 'pending'),
   passed('가결', 'passed'),
   amendmentPassed('수정안반영폐기', 'amendmentPassed'),
   alternativePassed('대안반영폐기', 'alternativePassed'),
   termExpiration('임기만료폐기', 'termExpiration'),
+  pending('계류', 'pending'),
   dispose('폐기', 'dispose'),
   withdrawal('철회', 'withdrawal'),
   rejected('부결', 'rejected');
