@@ -28,9 +28,6 @@ class CandidateDetailScreen extends StatefulWidget {
 
 class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     with SingleTickerProviderStateMixin {
-  String currentTab = tabs[0];
-  late TabController _tabController;
-
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
     if (!await launchUrl(url)) {
@@ -74,16 +71,132 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
+  Widget _representBillsPage() {
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        Stack(
+          children: [
+            GestureDetector(
+              onTap: _onBillsTap,
+              child: AbsorbPointer(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          '대표 발의',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Sizes.size18,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: Sizes.size8,
+                        ),
+                        Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            '총 ${widget.candidate.bills.length}개 법안',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: Sizes.size14,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Icon(
+                                Icons.chevron_right_sharp,
+                                size: Sizes.size32,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Hero(
+                      tag: '대표발의-${widget.candidate.id}',
+                      child: BillStatusDonutChart(
+                        passed: filterStatus(BillStatusEnum.passed.koreanName),
+                        pending:
+                            filterStatus(BillStatusEnum.pending.koreanName),
+                        amendmentPassed: filterStatus(
+                          BillStatusEnum.amendmentPassed.koreanName,
+                        ),
+                        alternativePassed: filterStatus(
+                          BillStatusEnum.alternativePassed.koreanName,
+                        ),
+                        termExpiration: filterStatus(
+                          BillStatusEnum.termExpiration.koreanName,
+                        ),
+                        dispose:
+                            filterStatus(BillStatusEnum.dispose.koreanName),
+                        withdrawal: filterStatus(
+                          BillStatusEnum.withdrawal.koreanName,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      '소속 위원회별 대표 발의안 제출 횟수',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizes.size18,
+                      ),
+                    ),
+                    const Divider(),
+                    ...widget.candidate.billsStatistics
+                        .where((element) => element.name.isNotEmpty)
+                        .map(
+                          (bs) => ListTile(
+                            title: Row(
+                              children: [
+                                Badge(
+                                  isLabelVisible: widget
+                                      .candidate.affiliatedCommittee
+                                      .contains(bs.name),
+                                  label: const Text(
+                                    '소속',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  offset: const Offset(20, 3.5),
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    bs.name,
+                                    style:
+                                        const TextStyle(fontSize: Sizes.size16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            leading: SizedBox(
+                              width: Sizes.size56,
+                              child: Text(
+                                '${bs.value}회',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: Sizes.size16),
+                              ),
+                            ),
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  Widget _collsBillsPage() {
+    return const Center(child: Text("공동발의 페이지"));
   }
 
   @override
@@ -220,146 +333,16 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
             ];
           },
           body: Container(
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: Sizes.size12,
                 horizontal: Sizes.size24,
               ),
               child: TabBarView(
-                controller: _tabController,
                 children: [
-                  ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: _onBillsTap,
-                            child: AbsorbPointer(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        '대표 발의',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Sizes.size18,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: Sizes.size8,
-                                      ),
-                                      Opacity(
-                                        opacity: 0.6,
-                                        child: Text(
-                                          '총 ${widget.candidate.bills.length}개 법안',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: Sizes.size14,
-                                          ),
-                                        ),
-                                      ),
-                                      const Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Opacity(
-                                            opacity: 0.6,
-                                            child: Icon(
-                                              Icons.chevron_right_sharp,
-                                              size: Sizes.size32,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Hero(
-                                    tag: '대표발의-${widget.candidate.id}',
-                                    child: BillStatusDonutChart(
-                                      passed: filterStatus(
-                                          BillStatusEnum.passed.koreanName),
-                                      pending: filterStatus(
-                                          BillStatusEnum.pending.koreanName),
-                                      amendmentPassed: filterStatus(
-                                        BillStatusEnum
-                                            .amendmentPassed.koreanName,
-                                      ),
-                                      alternativePassed: filterStatus(
-                                        BillStatusEnum
-                                            .alternativePassed.koreanName,
-                                      ),
-                                      termExpiration: filterStatus(
-                                        BillStatusEnum
-                                            .termExpiration.koreanName,
-                                      ),
-                                      dispose: filterStatus(
-                                          BillStatusEnum.dispose.koreanName),
-                                      withdrawal: filterStatus(
-                                        BillStatusEnum.withdrawal.koreanName,
-                                      ),
-                                    ),
-                                  ),
-                                  const Text(
-                                    '소속 위원회별 대표 발의안 제출 횟수',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Sizes.size18,
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  ...widget.candidate.billsStatistics
-                                      .where(
-                                          (element) => element.name.isNotEmpty)
-                                      .map(
-                                        (bs) => ListTile(
-                                          title: Row(
-                                            children: [
-                                              Badge(
-                                                isLabelVisible: widget.candidate
-                                                    .affiliatedCommittee
-                                                    .contains(bs.name),
-                                                label: const Text(
-                                                  '소속',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                offset: const Offset(20, 3.5),
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .primaryColor,
-                                                child: Text(
-                                                  bs.name,
-                                                  style: const TextStyle(
-                                                      fontSize: Sizes.size16),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          leading: SizedBox(
-                                            width: Sizes.size56,
-                                            child: Text(
-                                              '${bs.value}회',
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  fontSize: Sizes.size16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  const Center(
-                    child: Text('page two'),
-                  ),
+                  _representBillsPage(), // 대표발의 법안 페이지
+                  _collsBillsPage(), // 공동발의 법안 페이지
                 ],
               ),
             ),
