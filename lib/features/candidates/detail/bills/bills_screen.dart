@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
@@ -60,7 +59,7 @@ class _BillsScreenState extends State<BillsScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: Hero(
-                tag: '대표 발의',
+                tag: '대표발의-${widget.candidate.id}',
                 child: BillStatusDonutChart(
                   passed: filterStatus(BillStatusEnum.passed.koreanName),
                   pending: filterStatus(BillStatusEnum.pending.koreanName),
