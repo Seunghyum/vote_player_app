@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/persistent_tabbar.dart';
@@ -202,7 +203,9 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: BillAppBar(
+        title: Text(widget.candidate.koName),
+      ),
       body: DefaultTabController(
         length: tabs.length,
         child: NestedScrollView(
@@ -222,15 +225,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                             child: CircleAvatar(
                               foregroundImage: NetworkImage(widget.imagePath),
                             ),
-                          ),
-                        ),
-                        Gaps.v10,
-                        Text(
-                          widget.candidate.koName,
-                          style: const TextStyle(
-                            fontSize: Sizes.size20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
                           ),
                         ),
                         Gaps.v10,

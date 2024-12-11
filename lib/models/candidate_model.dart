@@ -13,6 +13,7 @@ class Candidate {
   String secretary = '';
   String officeGuide = '';
   List<Bill> bills;
+  List<Bill> collabills;
   List<BillsStatisticsItem> billsStatistics;
 
   Candidate({
@@ -34,6 +35,7 @@ class Candidate {
     required this.koName,
     required this.partyName,
     required this.bills,
+    required this.collabills,
     required this.billsStatistics,
   });
   factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
@@ -57,6 +59,9 @@ class Candidate {
         bills: List<Bill>.from(
           json["bills"].map((x) => Bill.fromJson(x)),
         ),
+        collabills: List<Bill>.from(
+          json["bills"].map((x) => Bill.fromJson(x)),
+        ),
         billsStatistics: List<BillsStatisticsItem>.from(
           json['billsStatistics'].map((x) => BillsStatisticsItem.fromJson(x)),
         ),
@@ -70,6 +75,8 @@ class Bill {
   String committee;
   DateTime date;
   String status;
+  String summary;
+  String url;
 
   Bill({
     required this.nth,
@@ -78,6 +85,8 @@ class Bill {
     required this.committee,
     required this.date,
     required this.status,
+    required this.summary,
+    required this.url,
   });
 
   factory Bill.fromJson(Map<String, dynamic> json) => Bill(
@@ -87,6 +96,8 @@ class Bill {
         committee: json["committee"] ?? '',
         date: DateTime.parse(json["date"] ?? ''),
         status: json["status"] ?? '',
+        summary: json["summary"] ?? '',
+        url: json["url"] ?? '',
       );
 }
 

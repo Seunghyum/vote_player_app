@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/bill_detail_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
@@ -49,10 +51,44 @@ class _BillsScreenState extends State<BillsScreen> {
     super.initState();
   }
 
+  void _onListTileTap({
+    required String title,
+    required String summary,
+    required String url,
+  }) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return BillDetailScreen(
+            title: title,
+            summary: summary,
+            url: url,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: BillAppBar(
+        title: Text(widget.candidate.koName),
+      ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
         child: CustomScrollView(
@@ -110,6 +146,11 @@ class _BillsScreenState extends State<BillsScreen> {
                 ),
                 ...filteredList.map(
                   (e) => ListTile(
+                    onTap: () => _onListTileTap(
+                      title: e.name,
+                      summary: e.summary,
+                      url: e.url,
+                    ),
                     leading: BillStatusLabel(
                       status: getBillStatus(e.status),
                     ),
