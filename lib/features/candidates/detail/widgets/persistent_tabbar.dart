@@ -29,7 +29,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
               ),
             ),
           ],
-        ), // TODO: 공통법안 갯수
+        ), // TODO: 공동법안 갯수
       ),
     );
   }
@@ -61,8 +61,8 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
             count: candidate.bills.length,
           ),
           _menuTab(
-            title: '공통발의',
-            count: 0,
+            title: '공동발의',
+            count: this.candidate.collabills.length,
           ) // TODO
         ],
       ),

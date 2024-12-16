@@ -46,6 +46,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         .length;
   }
 
+  int filterCollaStatus(String status) {
+    return widget.candidate.collabills
+        .where((element) => element.status == status)
+        .length;
+  }
+
   void _onBillsTap() {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -86,7 +92,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                     Row(
                       children: [
                         const Text(
-                          '대표 발의',
+                          '공동 발의',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: Sizes.size18,
@@ -197,7 +203,128 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   Widget _collsBillsPage() {
-    return const Center(child: Text("공동발의 페이지"));
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        Stack(
+          children: [
+            GestureDetector(
+              onTap: _onBillsTap,
+              child: AbsorbPointer(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          '공동 발의',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Sizes.size18,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: Sizes.size8,
+                        ),
+                        Opacity(
+                          opacity: 0.6,
+                          child: Text(
+                            '총 ${widget.candidate.collabills.length}개 법안',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: Sizes.size14,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: Icon(
+                                Icons.chevron_right_sharp,
+                                size: Sizes.size32,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Hero(
+                      tag: '공동발의-${widget.candidate.id}',
+                      child: BillStatusDonutChart(
+                        passed:
+                            filterCollaStatus(BillStatusEnum.passed.koreanName),
+                        pending: filterCollaStatus(
+                            BillStatusEnum.pending.koreanName),
+                        amendmentPassed: filterCollaStatus(
+                          BillStatusEnum.amendmentPassed.koreanName,
+                        ),
+                        alternativePassed: filterCollaStatus(
+                          BillStatusEnum.alternativePassed.koreanName,
+                        ),
+                        termExpiration: filterCollaStatus(
+                          BillStatusEnum.termExpiration.koreanName,
+                        ),
+                        dispose: filterCollaStatus(
+                            BillStatusEnum.dispose.koreanName),
+                        withdrawal: filterCollaStatus(
+                          BillStatusEnum.withdrawal.koreanName,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      '소속 위원회별 대표 발의안 제출 횟수',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizes.size18,
+                      ),
+                    ),
+                    const Divider(),
+                    ...widget.candidate.collabillsStatistics
+                        .where((element) => element.name.isNotEmpty)
+                        .map(
+                          (bs) => ListTile(
+                            title: Row(
+                              children: [
+                                Badge(
+                                  isLabelVisible: widget
+                                      .candidate.affiliatedCommittee
+                                      .contains(bs.name),
+                                  label: const Text(
+                                    '소속',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  offset: const Offset(20, 3.5),
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    bs.name,
+                                    style:
+                                        const TextStyle(fontSize: Sizes.size16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            leading: SizedBox(
+                              width: Sizes.size56,
+                              child: Text(
+                                '${bs.value}회',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: Sizes.size16),
+                              ),
+                            ),
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
   }
 
   @override

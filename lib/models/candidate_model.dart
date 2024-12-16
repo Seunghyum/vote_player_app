@@ -15,6 +15,7 @@ class Candidate {
   List<Bill> bills;
   List<Bill> collabills;
   List<BillsStatisticsItem> billsStatistics;
+  List<BillsStatisticsItem> collabillsStatistics;
 
   Candidate({
     required this.id,
@@ -37,33 +38,39 @@ class Candidate {
     required this.bills,
     required this.collabills,
     required this.billsStatistics,
+    required this.collabillsStatistics,
   });
   factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
-        id: json["_id"],
-        enName: json["enName"],
-        electoralDistrict: json["electoralDistrict"],
-        affiliatedCommittee: json["affiliatedCommittee"],
-        electionCount: json["electionCount"],
-        officePhone: json["officePhone"],
-        officeRoom: json["officeRoom"],
-        memberHomepage: json["memberHomepage"],
-        individualHomepage: json["individualHomepage"],
-        email: json["email"],
-        aide: json["aide"],
-        chiefOfStaff: json["chiefOfStaff"],
-        secretary: json["secretary"],
-        officeGuide: json["officeGuide"],
-        history: json["history"],
-        koName: json["koName"],
-        partyName: json["partyName"],
+        id: json["_id"] ?? '',
+        enName: json["enName"] ?? '',
+        electoralDistrict: json["electoralDistrict"] ?? '',
+        affiliatedCommittee: json["affiliatedCommittee"] ?? '',
+        electionCount: json["electionCount"] ?? 0,
+        officePhone: json["officePhone"] ?? '',
+        officeRoom: json["officeRoom"] ?? '',
+        memberHomepage: json["memberHomepage"] ?? '',
+        individualHomepage: json["individualHomepage"] ?? '',
+        email: json["email"] ?? '',
+        aide: json["aide"] ?? '',
+        chiefOfStaff: json["chiefOfStaff"] ?? '',
+        secretary: json["secretary"] ?? '',
+        officeGuide: json["officeGuide"] ?? '',
+        history: json["history"] ?? '',
+        koName: json["koName"] ?? '',
+        partyName: json["partyName"] ?? '',
         bills: List<Bill>.from(
-          json["bills"].map((x) => Bill.fromJson(x)),
+          (json["bills"] ?? []).map((x) => Bill.fromJson(x)),
         ),
         collabills: List<Bill>.from(
-          json["bills"].map((x) => Bill.fromJson(x)),
+          (json["collabills"] ?? []).map((x) => Bill.fromJson(x)),
         ),
         billsStatistics: List<BillsStatisticsItem>.from(
-          json['billsStatistics'].map((x) => BillsStatisticsItem.fromJson(x)),
+          (json['billsStatistics'] ?? [])
+              .map((x) => BillsStatisticsItem.fromJson(x)),
+        ),
+        collabillsStatistics: List<BillsStatisticsItem>.from(
+          (json['collabillsStatistics'] ?? [])
+              .map((x) => BillsStatisticsItem.fromJson(x)),
         ),
       );
 }
@@ -72,11 +79,12 @@ class Bill {
   String nth;
   String name;
   String proposers;
-  String committee;
+  String committee = '';
   DateTime date;
   String status;
   String summary;
-  String url;
+  String billDetailUrl;
+  String billNo;
 
   Bill({
     required this.nth,
@@ -86,7 +94,8 @@ class Bill {
     required this.date,
     required this.status,
     required this.summary,
-    required this.url,
+    required this.billNo,
+    required this.billDetailUrl,
   });
 
   factory Bill.fromJson(Map<String, dynamic> json) => Bill(
@@ -97,7 +106,8 @@ class Bill {
         date: DateTime.parse(json["date"] ?? ''),
         status: json["status"] ?? '',
         summary: json["summary"] ?? '',
-        url: json["url"] ?? '',
+        billNo: json["billNo"] ?? '',
+        billDetailUrl: json["billDetailUrl"] ?? '',
       );
 }
 

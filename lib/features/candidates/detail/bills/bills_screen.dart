@@ -149,7 +149,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     onTap: () => _onListTileTap(
                       title: e.name,
                       summary: e.summary,
-                      url: e.url,
+                      url: e.billDetailUrl,
                     ),
                     leading: BillStatusLabel(
                       status: getBillStatus(e.status),

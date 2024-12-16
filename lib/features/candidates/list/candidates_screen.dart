@@ -125,7 +125,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Sizes.size32),
                   child: Text(
-                    '${summary?.count}개의 결과',
+                    '${summary?.count ?? 0}개의 결과',
                     textAlign: TextAlign.end,
                   ),
                 ),
