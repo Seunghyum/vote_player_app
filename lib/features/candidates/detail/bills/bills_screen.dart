@@ -10,9 +10,12 @@ import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/utils/datetime.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
+enum BillTypeEnum { bills, collabils }
+
 class BillsScreen extends StatefulWidget {
+  final BillTypeEnum type;
   final Candidate candidate;
-  const BillsScreen({super.key, required this.candidate});
+  const BillsScreen({super.key, required this.candidate, required this.type});
 
   @override
   State<BillsScreen> createState() => _BillsScreenState();
@@ -22,9 +25,10 @@ class _BillsScreenState extends State<BillsScreen> {
   BillStatusEnum filterValue = BillStatusEnum.passed;
   Iterable<Bill> filteredList = [];
   int filterStatus(String status) {
-    return widget.candidate.bills
-        .where((element) => element.status == status)
-        .length;
+    final list = widget.type == BillTypeEnum.bills
+        ? widget.candidate.bills
+        : widget.candidate.collabills;
+    return list.where((element) => element.status == status).length;
   }
 
   void _onFilterTap(BillStatusEnum value) {
@@ -34,7 +38,10 @@ class _BillsScreenState extends State<BillsScreen> {
       if (value == BillStatusEnum.all) {
         filteredList = widget.candidate.bills;
       } else {
-        filteredList = widget.candidate.bills.where((e) {
+        final list = widget.type == BillTypeEnum.bills
+            ? widget.candidate.bills
+            : widget.candidate.collabills;
+        filteredList = list.where((e) {
           return getBillStatus(e.status).englishName == value.englishName;
         });
       }
@@ -51,11 +58,7 @@ class _BillsScreenState extends State<BillsScreen> {
     super.initState();
   }
 
-  void _onListTileTap({
-    required String title,
-    required String summary,
-    required String url,
-  }) {
+  void _onListTileTap({required Bill bill}) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
@@ -63,9 +66,7 @@ class _BillsScreenState extends State<BillsScreen> {
         reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) {
           return BillDetailScreen(
-            title: title,
-            summary: summary,
-            url: url,
+            bill: bill,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -95,7 +96,8 @@ class _BillsScreenState extends State<BillsScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: Hero(
-                tag: '대표발의-${widget.candidate.id}',
+                tag:
+                    '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의-${widget.candidate.id}',
                 child: BillStatusDonutChart(
                   passed: filterStatus(BillStatusEnum.passed.koreanName),
                   pending: filterStatus(BillStatusEnum.pending.koreanName),
@@ -118,9 +120,9 @@ class _BillsScreenState extends State<BillsScreen> {
             SliverList.list(
               children: [
                 Gaps.v24,
-                const Text(
-                  '대표 발의 상세',
-                  style: TextStyle(
+                Text(
+                  '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의 상세',
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: Sizes.size18,
                   ),
@@ -146,11 +148,7 @@ class _BillsScreenState extends State<BillsScreen> {
                 ),
                 ...filteredList.map(
                   (e) => ListTile(
-                    onTap: () => _onListTileTap(
-                      title: e.name,
-                      summary: e.summary,
-                      url: e.billDetailUrl,
-                    ),
+                    onTap: () => _onListTileTap(bill: e),
                     leading: BillStatusLabel(
                       status: getBillStatus(e.status),
                     ),

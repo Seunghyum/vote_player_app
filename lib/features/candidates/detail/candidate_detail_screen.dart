@@ -52,16 +52,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         .length;
   }
 
-  void _onBillsTap() {
+  void _onBillsTap(BillTypeEnum type) {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
         transitionDuration: const Duration(milliseconds: 300),
         reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return BillsScreen(
-            candidate: widget.candidate,
-          );
+          return BillsScreen(candidate: widget.candidate, type: type);
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
@@ -85,7 +83,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         Stack(
           children: [
             GestureDetector(
-              onTap: _onBillsTap,
+              onTap: () => _onBillsTap(BillTypeEnum.bills),
               child: AbsorbPointer(
                 child: Column(
                   children: [
@@ -209,7 +207,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         Stack(
           children: [
             GestureDetector(
-              onTap: _onBillsTap,
+              onTap: () => _onBillsTap(BillTypeEnum.collabils),
               child: AbsorbPointer(
                 child: Column(
                   children: [

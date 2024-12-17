@@ -47,7 +47,6 @@ class CandidatesService {
 
       candidateResponse.summary =
           CandidatesSummary(count: data['summary']['count']);
-
       for (var candidate in data['result']) {
         candidateResponse.result.add(Candidate.fromJson(candidate));
       }
