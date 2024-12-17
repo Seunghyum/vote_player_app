@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:vote_player_app/constants/sizes.dart';
@@ -56,11 +57,13 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   }
 
   dynamic _onInputChanged(String? text) async {
-    if (text == null) return;
-
-    _pagingController.itemList = (await CandidatesService()
-            .getCandidates(currentPage: 0, pageCount: pageSize, koName: text))
-        .result;
+    EasyDebounce.debounce('debouncer2', const Duration(milliseconds: 400),
+        () async {
+      if (text == null) return;
+      _pagingController.itemList = (await CandidatesService()
+              .getCandidates(currentPage: 0, pageCount: pageSize, koName: text))
+          .result;
+    });
   }
 
   Future<void> _fetchPage(int pageKey) async {
