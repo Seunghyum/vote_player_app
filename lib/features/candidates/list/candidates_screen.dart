@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vote_player_app/constants/sizes.dart';
-import 'package:vote_player_app/features/candidates/detail/candidate_detail_screen.dart';
 
 import 'package:vote_player_app/features/candidates/list/widgets/search_input.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
 import 'package:vote_player_app/utils/keyboard.dart';
 import 'package:vote_player_app/utils/url.dart';
@@ -29,33 +28,9 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   void _onListTileTap({
     required String id,
-    required String imagePath,
-    required Candidate candidate,
   }) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionDuration: const Duration(milliseconds: 300),
-        reverseTransitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return CandidateDetailScreen(
-            imagePath: imagePath,
-            candidate: candidate,
-          );
-        },
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    );
+    hideKeyboard(context);
+    context.push('/candidates/$id');
   }
 
   dynamic _onInputChanged(String? text) async {
@@ -101,7 +76,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     return GestureDetector(
       onTap: () => hideKeyboard(context),
       child: Scaffold(
-        body: InfiniteQueryBuilder<CandidateResponse, int>(
+        body: InfiniteQueryBuilder<CandidatesResponse, int>(
           query: getCandidatesInfiniteQuery(koName: _searchQuery),
           builder: (context, state, query) {
             final allPosts = state.data;
@@ -167,8 +142,6 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                                   child: ListTile(
                                     onTap: () => _onListTileTap(
                                       id: item.id,
-                                      imagePath: imagePath,
-                                      candidate: item,
                                     ),
                                     leading: Hero(
                                       tag: item.id,

@@ -8,24 +8,7 @@ import 'package:vote_player_app/models/candidate_model.dart';
 var logger = Logger();
 
 class CandidatesService {
-  late List<Candidate> candidates;
-  late String? serviceKey = dotenv.env['serviceKey'];
-  late int? pageNo = 1;
-  late int? numOfRows = 15;
-  late int? sgId;
-  late int? sgTypecode;
-  late int? cnddtId;
-
-  CandidatesService({
-    this.serviceKey,
-    this.pageNo,
-    this.numOfRows,
-    this.sgId,
-    this.sgTypecode,
-    this.cnddtId,
-  });
-
-  Future<CandidateResponse> getCandidates({
+  Future<CandidatesResponse> getCandidates({
     int page = 0,
     int pageCount = 15,
     String? koName,
@@ -38,7 +21,7 @@ class CandidatesService {
       final url = Uri.parse(
         path,
       );
-      CandidateResponse candidateResponse = CandidateResponse(
+      CandidatesResponse cr = CandidatesResponse(
           result: [], summary: CandidatesSummary(total: 0, isLastPage: true));
 
       final response = await http.get(url);
@@ -46,14 +29,14 @@ class CandidatesService {
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
 
-      candidateResponse.summary = CandidatesSummary(
+      cr.summary = CandidatesSummary(
           total: data['summary']['total'],
           isLastPage: data['summary']['isLastPage']);
       for (var candidate in data['result']) {
-        candidateResponse.result.add(Candidate.fromJson(candidate));
+        cr.result.add(Candidate.fromJson(candidate));
       }
 
-      return candidateResponse;
+      return cr;
     } catch (err) {
       logger.e(err);
       return throw '데이터를 정상적으로 불러오지 못했습니다';
@@ -83,11 +66,11 @@ class CandidatesService {
   }
 }
 
-InfiniteQuery<CandidateResponse, int> getCandidatesInfiniteQuery({
+InfiniteQuery<CandidatesResponse, int> getCandidatesInfiniteQuery({
   String? koName,
   int? page,
 }) {
-  return InfiniteQuery<CandidateResponse, int>(
+  return InfiniteQuery<CandidatesResponse, int>(
     key: 'candidates-$koName',
     getNextArg: (state) {
       if (state.lastPage?.summary.isLastPage ?? false) return null;
@@ -98,11 +81,20 @@ InfiniteQuery<CandidateResponse, int> getCandidatesInfiniteQuery({
   );
 }
 
-class CandidateResponse {
+Query<Candidate> getCandidateByIdQuery({
+  required String id,
+}) {
+  return Query<Candidate>(
+    key: 'candidate-$id',
+    queryFn: () => CandidatesService().getCandidateById(id),
+  );
+}
+
+class CandidatesResponse {
   List<Candidate> result;
   CandidatesSummary summary;
 
-  CandidateResponse({required this.result, required this.summary});
+  CandidatesResponse({required this.result, required this.summary});
 }
 
 class CandidatesSummary {
