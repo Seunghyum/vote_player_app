@@ -93,7 +93,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                     SliverToBoxAdapter(
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).disabledColor),
+                          color: Theme.of(context).disabledColor,
+                        ),
                         child: Text(
                           state.error is SocketException
                               ? "No internet connection"
@@ -108,7 +109,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                       elevation: 1,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size10),
+                          horizontal: Sizes.size10,
+                        ),
                         child: CandidateSearchInput(
                           placeholder: "이름",
                           onChanged: _onInputChanged,
@@ -118,7 +120,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size32),
+                          horizontal: Sizes.size32,
+                        ),
                         child: Text(
                           '${allPosts[0].summary.total}개의 결과',
                           textAlign: TextAlign.end,
@@ -129,13 +132,14 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (context, i) {
                           var list = allPosts[i];
-                          return Column(children: [
-                            ...list.result.map((item) {
-                              final imagePath = getS3ImageUrl(
-                                BucketCategory.candidates,
-                                '${item.enName}.png',
-                              );
-                              return Padding(
+                          return Column(
+                            children: [
+                              ...list.result.map((item) {
+                                final imagePath = getS3ImageUrl(
+                                  BucketCategory.candidates,
+                                  '${item.enName}.png',
+                                );
+                                return Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: Sizes.size10,
                                   ),
@@ -163,13 +167,15 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                                       Icons.chevron_right_sharp,
                                       size: Sizes.size32,
                                     ),
-                                  ));
-                            })
-                          ]);
+                                  ),
+                                );
+                              }),
+                            ],
+                          );
                         },
                         childCount: allPosts.length,
                       ),
-                    )
+                    ),
                   ],
                   if (state.status == QueryStatus.loading)
                     const SliverToBoxAdapter(

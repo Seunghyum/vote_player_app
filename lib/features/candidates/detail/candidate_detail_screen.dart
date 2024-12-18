@@ -34,6 +34,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   late Future<Candidate> featureCandidate;
   late int billsCount;
   late int collabillsCount;
+  BillTypeEnum billType = BillTypeEnum.bills;
 
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
@@ -59,7 +60,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   void _onBillsTap(BillTypeEnum type) {
-    context.push('/candidates/${widget.id}/bills');
+    context.push('/candidates/${widget.id}/bills?type=$billType&');
   }
 
   Widget _billsPage(BillTypeEnum type) {
@@ -79,7 +80,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         Stack(
           children: [
             GestureDetector(
-              onTap: () => _onBillsTap(BillTypeEnum.collabils),
+              onTap: () => _onBillsTap(type),
               child: AbsorbPointer(
                 child: Column(
                   children: [
