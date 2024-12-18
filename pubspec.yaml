@@ -48,6 +48,7 @@ dependencies:
   easy_debounce: ^2.0.3
   cached_query_flutter: ^2.5.1
   cached_storage: ^2.0.14
+  skeletonizer: ^1.4.2
 
 dev_dependencies:
   flutter_test:
