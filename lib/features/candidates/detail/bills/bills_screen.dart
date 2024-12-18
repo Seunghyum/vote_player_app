@@ -26,9 +26,14 @@ class _BillsScreenState extends State<BillsScreen> {
   Iterable<Bill> filteredList = [];
   int filterStatus(String status) {
     final list = widget.type == BillTypeEnum.bills
-        ? widget.candidate.bills
-        : widget.candidate.collabills;
-    return list.where((element) => element.status == status).length;
+        ? widget.candidate.billsStatusStatistics
+        : widget.candidate.collabillsStatusStatistics;
+    return list
+        .firstWhere(
+          (element) => element.name == status,
+          orElse: () => BillsStatisticsItem(name: status, value: 0),
+        )
+        .value;
   }
 
   void _onFilterTap(BillStatusEnum value) {

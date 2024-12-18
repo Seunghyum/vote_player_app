@@ -5,8 +5,10 @@ import 'package:vote_player_app/models/candidate_model.dart';
 List<String> tabs = ['대표발의', '공동발의'];
 
 class PersistentTabBar extends SliverPersistentHeaderDelegate {
-  final Candidate candidate;
-  const PersistentTabBar({required this.candidate});
+  final int billsCount;
+  final int collabillsCount;
+  const PersistentTabBar(
+      {required this.collabillsCount, required this.billsCount});
 
   Widget _menuTab({required String title, required int count}) {
     return Tab(
@@ -57,11 +59,11 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
         tabs: [
           _menuTab(
             title: '대표법안',
-            count: candidate.bills.length,
+            count: billsCount,
           ),
           _menuTab(
             title: '공동발의',
-            count: this.candidate.collabills.length,
+            count: collabillsCount,
           ) // TODO
         ],
       ),

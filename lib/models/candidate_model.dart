@@ -16,6 +16,8 @@ class Candidate {
   List<Bill> collabills;
   List<BillsStatisticsItem> billsStatistics;
   List<BillsStatisticsItem> collabillsStatistics;
+  List<BillsStatisticsItem> billsStatusStatistics;
+  List<BillsStatisticsItem> collabillsStatusStatistics;
 
   Candidate({
     required this.id,
@@ -39,6 +41,8 @@ class Candidate {
     required this.collabills,
     required this.billsStatistics,
     required this.collabillsStatistics,
+    required this.billsStatusStatistics,
+    required this.collabillsStatusStatistics,
   });
   factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
         id: json["_id"] ?? '',
@@ -70,6 +74,14 @@ class Candidate {
         ),
         collabillsStatistics: List<BillsStatisticsItem>.from(
           (json['collabillsStatistics'] ?? [])
+              .map((x) => BillsStatisticsItem.fromJson(x)),
+        ),
+        billsStatusStatistics: List<BillsStatisticsItem>.from(
+          (json['billsStatusStatistics'] ?? [])
+              .map((x) => BillsStatisticsItem.fromJson(x)),
+        ),
+        collabillsStatusStatistics: List<BillsStatisticsItem>.from(
+          (json['collabillsStatusStatistics'] ?? [])
               .map((x) => BillsStatisticsItem.fromJson(x)),
         ),
       );

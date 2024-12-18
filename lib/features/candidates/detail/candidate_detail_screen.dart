@@ -32,6 +32,8 @@ class CandidateDetailScreen extends StatefulWidget {
 class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     with SingleTickerProviderStateMixin {
   late Future<Candidate> featureCandidate;
+  late int billsCount;
+  late int collabillsCount;
 
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
@@ -44,18 +46,15 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     return text.isNotEmpty ? text : '-';
   }
 
-  int? filterStatus(String status) {
+  int filterStatus(String status, BillTypeEnum type) {
     final query = getCandidateByIdQuery(id: widget.id);
-    return query.state.data?.bills
-        .where((element) => element.status == status)
-        .length;
-  }
-
-  int filterCollaStatus(String status) {
-    final query = getCandidateByIdQuery(id: widget.id);
-    return query.state.data?.collabills
-            .where((element) => element.status == status)
-            .length ??
+    final target = type == BillTypeEnum.bills
+        ? query.state.data?.billsStatusStatistics
+        : query.state.data?.collabillsStatusStatistics;
+    return target
+            ?.firstWhere((element) => element.name == status,
+                orElse: () => BillsStatisticsItem(name: status, value: 0))
+            .value ??
         0;
   }
 
@@ -64,10 +63,16 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   Widget _billsPage(BillTypeEnum type) {
-    var typeText = type == BillTypeEnum.bills ? '대표' : '공동';
-    var query = getCandidateByIdQuery(id: widget.id);
-    var candidate = query.state.data;
-    var isTabViewValid = (candidate?.billsStatistics.length ?? 0) > 0;
+    final typeText = type == BillTypeEnum.bills ? '대표' : '공동';
+    final query = getCandidateByIdQuery(id: widget.id);
+    final candidate = query.state.data;
+
+    // NOTE 빌드 타임에 실행되므로 setState 없이 실행
+    billsCount = (candidate?.billsStatistics ?? [])
+        .fold(0, (sum, next) => sum + next.value);
+    collabillsCount = (candidate?.collabillsStatistics ?? [])
+        .fold(0, (sum, next) => sum + next.value);
+
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       children: [
@@ -93,7 +98,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                         Opacity(
                           opacity: 0.6,
                           child: Text(
-                            '총 ${candidate?.collabills.length ?? 0}개 법안',
+                            '총 ${type == BillTypeEnum.bills ? billsCount : collabillsCount}개의 법안',
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: Sizes.size14,
@@ -114,32 +119,43 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                         ),
                       ],
                     ),
-                    if (isTabViewValid == true)
-                      Hero(
-                        tag: '$typeText발의-${candidate?.id}',
-                        child: BillStatusDonutChart(
-                          passed: filterCollaStatus(
-                              BillStatusEnum.passed.koreanName),
-                          pending: filterCollaStatus(
-                            BillStatusEnum.pending.koreanName,
-                          ),
-                          amendmentPassed: filterCollaStatus(
-                            BillStatusEnum.amendmentPassed.koreanName,
-                          ),
-                          alternativePassed: filterCollaStatus(
-                            BillStatusEnum.alternativePassed.koreanName,
-                          ),
-                          termExpiration: filterCollaStatus(
-                            BillStatusEnum.termExpiration.koreanName,
-                          ),
-                          dispose: filterCollaStatus(
-                            BillStatusEnum.dispose.koreanName,
-                          ),
-                          withdrawal: filterCollaStatus(
-                            BillStatusEnum.withdrawal.koreanName,
-                          ),
+                    Hero(
+                      tag: '$typeText발의-${candidate?.id}',
+                      child: BillStatusDonutChart(
+                        passed: filterStatus(
+                          BillStatusEnum.passed.koreanName,
+                          type,
+                        ),
+                        pending: filterStatus(
+                          BillStatusEnum.pending.koreanName,
+                          type,
+                        ),
+                        amendmentPassed: filterStatus(
+                          BillStatusEnum.amendmentPassed.koreanName,
+                          type,
+                        ),
+                        alternativePassed: filterStatus(
+                          BillStatusEnum.alternativePassed.koreanName,
+                          type,
+                        ),
+                        termExpiration: filterStatus(
+                          BillStatusEnum.termExpiration.koreanName,
+                          type,
+                        ),
+                        dispose: filterStatus(
+                          BillStatusEnum.dispose.koreanName,
+                          type,
+                        ),
+                        withdrawal: filterStatus(
+                          BillStatusEnum.withdrawal.koreanName,
+                          type,
+                        ),
+                        rejected: filterStatus(
+                          BillStatusEnum.rejected.koreanName,
+                          type,
                         ),
                       ),
+                    ),
                     const Text(
                       '소속 위원회별 대표 발의안 제출 횟수',
                       style: TextStyle(
@@ -171,7 +187,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                       child: Text(
                                         bs.name,
                                         style: const TextStyle(
-                                            fontSize: Sizes.size16),
+                                          fontSize: Sizes.size16,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -227,6 +244,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
               billsStatistics: [],
               collabills: [],
               collabillsStatistics: [],
+              billsStatusStatistics: [],
+              collabillsStatusStatistics: [],
             );
         return Skeletonizer(
           enabled: isLoading,
@@ -242,7 +261,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size24),
+                          horizontal: Sizes.size24,
+                        ),
                         child: Center(
                           child: Column(
                             children: [
@@ -363,7 +383,10 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                       ),
                     ),
                     SliverPersistentHeader(
-                      delegate: PersistentTabBar(candidate: result),
+                      delegate: PersistentTabBar(
+                        billsCount: billsCount,
+                        collabillsCount: collabillsCount,
+                      ),
                       pinned: true,
                     ),
                   ];
