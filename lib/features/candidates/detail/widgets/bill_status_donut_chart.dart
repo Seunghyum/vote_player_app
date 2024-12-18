@@ -39,14 +39,14 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
         children: [
           Expanded(
             child: AspectRatio(
-              aspectRatio: 1,
+              aspectRatio: 0.8,
               child: PieChart(
                 PieChartData(
                   borderData: FlBorderData(
                     show: false,
                   ),
                   sectionsSpace: 0,
-                  centerSpaceRadius: 40,
+                  centerSpaceRadius: 30,
                   sections: showingSections(
                     pending: widget.pending ?? 0,
                     passed: widget.passed ?? 0,

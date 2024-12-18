@@ -1,6 +1,7 @@
 import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
@@ -43,18 +44,19 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     return text.isNotEmpty ? text : '-';
   }
 
-  int filterStatus(String status) {
+  int? filterStatus(String status) {
     final query = getCandidateByIdQuery(id: widget.id);
-    return query.state.data!.bills
+    return query.state.data?.bills
         .where((element) => element.status == status)
         .length;
   }
 
   int filterCollaStatus(String status) {
     final query = getCandidateByIdQuery(id: widget.id);
-    return query.state.data!.collabills
-        .where((element) => element.status == status)
-        .length;
+    return query.state.data?.collabills
+            .where((element) => element.status == status)
+            .length ??
+        0;
   }
 
   void _onBillsTap(BillTypeEnum type) {
@@ -62,9 +64,10 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   Widget _billsPage(BillTypeEnum type) {
-    final typeText = type == BillTypeEnum.bills ? '대표' : '공동';
-    final query = getCandidateByIdQuery(id: widget.id);
-    var candidate = query.state.data!;
+    var typeText = type == BillTypeEnum.bills ? '대표' : '공동';
+    var query = getCandidateByIdQuery(id: widget.id);
+    var candidate = query.state.data;
+    var isTabViewValid = (candidate?.billsStatistics.length ?? 0) > 0;
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       children: [
@@ -90,7 +93,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                         Opacity(
                           opacity: 0.6,
                           child: Text(
-                            '총 ${candidate.collabills.length}개 법안',
+                            '총 ${candidate?.collabills.length ?? 0}개 법안',
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: Sizes.size14,
@@ -111,31 +114,32 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                         ),
                       ],
                     ),
-                    Hero(
-                      tag: '$typeText발의-${candidate.id}',
-                      child: BillStatusDonutChart(
-                        passed:
-                            filterCollaStatus(BillStatusEnum.passed.koreanName),
-                        pending: filterCollaStatus(
-                          BillStatusEnum.pending.koreanName,
-                        ),
-                        amendmentPassed: filterCollaStatus(
-                          BillStatusEnum.amendmentPassed.koreanName,
-                        ),
-                        alternativePassed: filterCollaStatus(
-                          BillStatusEnum.alternativePassed.koreanName,
-                        ),
-                        termExpiration: filterCollaStatus(
-                          BillStatusEnum.termExpiration.koreanName,
-                        ),
-                        dispose: filterCollaStatus(
-                          BillStatusEnum.dispose.koreanName,
-                        ),
-                        withdrawal: filterCollaStatus(
-                          BillStatusEnum.withdrawal.koreanName,
+                    if (isTabViewValid == true)
+                      Hero(
+                        tag: '$typeText발의-${candidate?.id}',
+                        child: BillStatusDonutChart(
+                          passed: filterCollaStatus(
+                              BillStatusEnum.passed.koreanName),
+                          pending: filterCollaStatus(
+                            BillStatusEnum.pending.koreanName,
+                          ),
+                          amendmentPassed: filterCollaStatus(
+                            BillStatusEnum.amendmentPassed.koreanName,
+                          ),
+                          alternativePassed: filterCollaStatus(
+                            BillStatusEnum.alternativePassed.koreanName,
+                          ),
+                          termExpiration: filterCollaStatus(
+                            BillStatusEnum.termExpiration.koreanName,
+                          ),
+                          dispose: filterCollaStatus(
+                            BillStatusEnum.dispose.koreanName,
+                          ),
+                          withdrawal: filterCollaStatus(
+                            BillStatusEnum.withdrawal.koreanName,
+                          ),
                         ),
                       ),
-                    ),
                     const Text(
                       '소속 위원회별 대표 발의안 제출 횟수',
                       style: TextStyle(
@@ -144,42 +148,46 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                       ),
                     ),
                     const Divider(),
-                    ...candidate.collabillsStatistics
-                        .where((element) => element.name.isNotEmpty)
-                        .map(
-                          (bs) => ListTile(
-                            title: Row(
-                              children: [
-                                Badge(
-                                  isLabelVisible: candidate.affiliatedCommittee
-                                      .contains(bs.name),
-                                  label: const Text(
-                                    '소속',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
+                    ...(candidate != null
+                        ? candidate.collabillsStatistics
+                            .where((element) => element.name.isNotEmpty)
+                            .map(
+                              (bs) => ListTile(
+                                title: Row(
+                                  children: [
+                                    Badge(
+                                      isLabelVisible: candidate
+                                          .affiliatedCommittee
+                                          .contains(bs.name),
+                                      label: const Text(
+                                        '소속',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      offset: const Offset(20, 3.5),
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
+                                      child: Text(
+                                        bs.name,
+                                        style: const TextStyle(
+                                            fontSize: Sizes.size16),
+                                      ),
                                     ),
-                                  ),
-                                  offset: const Offset(20, 3.5),
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
+                                  ],
+                                ),
+                                leading: SizedBox(
+                                  width: Sizes.size56,
                                   child: Text(
-                                    bs.name,
+                                    '${bs.value}회',
+                                    textAlign: TextAlign.center,
                                     style:
                                         const TextStyle(fontSize: Sizes.size16),
                                   ),
                                 ),
-                              ],
-                            ),
-                            leading: SizedBox(
-                              width: Sizes.size56,
-                              child: Text(
-                                '${bs.value}회',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: Sizes.size16),
                               ),
-                            ),
-                          ),
-                        ),
+                            )
+                        : []),
                   ],
                 ),
               ),
@@ -195,183 +203,184 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     return QueryBuilder<Candidate>(
       query: getCandidateByIdQuery(id: widget.id),
       builder: (context, state) {
-        if (state.status == QueryStatus.loading) {
-          return Scaffold(
+        final isLoading = state.data == null;
+        final result = state.data ??
+            Candidate(
+              id: '',
+              enName: "xxxx xxxx",
+              electoralDistrict: "xxxx xxxxx xxxxx",
+              affiliatedCommittee: "xxxxxxx",
+              electionCount: "xxxx xxxxxxxx  xxxxxxxx",
+              officePhone: "xx-xxx-xxxx",
+              officeRoom: "xxxxx xxxxxx",
+              individualHomepage: "xxxxxx xxxxxxxx xxxx",
+              email: "kds21341@naver.com",
+              aide: "xxxx xxxx",
+              chiefOfStaff: "xxxx xxxx",
+              secretary: "xxxx xxxx xxxx xxxx xxxx xxxx",
+              officeGuide: "xxxxxx xxxx xxxxx xxxx xx xxxxx",
+              history: "xxx xxxx xxxxx xxxxxx",
+              koName: "xxx xxx",
+              partyName: "xxxxx",
+              memberHomepage: 'xxxxxx xxx xxxxxx xxxxxx',
+              bills: [],
+              billsStatistics: [],
+              collabills: [],
+              collabillsStatistics: [],
+            );
+        return Skeletonizer(
+          enabled: isLoading,
+          child: Scaffold(
             appBar: BillAppBar(
-              title: const Text(''),
+              title: Text(result.koName),
             ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: Hero(
-                        tag: widget.id,
-                        child: const CircleAvatar(),
-                      ),
-                    ),
-                    Gaps.v10,
-                    const CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-        if (state.data == null) return const Text('잘못된 요청입니다');
-        return Scaffold(
-          appBar: BillAppBar(
-            title: Text(state.data!.koName),
-          ),
-          body: DefaultTabController(
-            length: tabs.length,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Sizes.size24),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              height: 150,
-                              child: Hero(
-                                tag: state.data!.id,
-                                child: CircleAvatar(
-                                  foregroundImage: NetworkImage(
-                                    getS3ImageUrl(
-                                      BucketCategory.candidates,
-                                      '${state.data!.enName}.png',
+            body: DefaultTabController(
+              length: tabs.length,
+              child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Sizes.size24),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 150,
+                                height: 150,
+                                child: Hero(
+                                  tag: result.id,
+                                  child: CircleAvatar(
+                                    foregroundImage: NetworkImage(
+                                      getS3ImageUrl(
+                                        BucketCategory.candidates,
+                                        '${result.enName}.png',
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Gaps.v10,
-                            ListTable(
-                              data: [
-                                {
-                                  "key": '소속 위원회',
-                                  "value": Text(
-                                    renderEmptyString(
-                                      state.data!.affiliatedCommittee,
-                                    ),
-                                  ),
-                                },
-                                {
-                                  "key": '선거구',
-                                  "value": Text(
-                                    renderEmptyString(
-                                      state.data!.electoralDistrict,
-                                    ),
-                                  ),
-                                },
-                                {
-                                  "key": '당선횟수',
-                                  "value": Text(
-                                    renderEmptyString(
-                                      state.data!.electionCount,
-                                    ),
-                                  ),
-                                },
-                                {
-                                  "key": '의원 홈페이지',
-                                  "value": GestureDetector(
-                                    onTap: () =>
-                                        _onLinkTap(state.data!.memberHomepage),
-                                    child: Text(
+                              Gaps.v10,
+                              ListTable(
+                                data: [
+                                  {
+                                    "key": '소속 위원회',
+                                    "value": Text(
                                       renderEmptyString(
-                                        state.data!.memberHomepage,
-                                      ),
-                                      style: TextStyle(
-                                        color: Colors.blue.shade700,
+                                        result.affiliatedCommittee,
                                       ),
                                     ),
-                                  ),
-                                },
-                                {
-                                  "key": '개별 홈페이지',
-                                  "value": GestureDetector(
-                                    onTap: () => _onLinkTap(
-                                      state.data!.individualHomepage,
-                                    ),
-                                    child: Text(
+                                  },
+                                  {
+                                    "key": '선거구',
+                                    "value": Text(
                                       renderEmptyString(
-                                        state.data!.individualHomepage,
-                                      ),
-                                      style: TextStyle(
-                                        color: Colors.blue.shade700,
+                                        result.electoralDistrict,
                                       ),
                                     ),
-                                  ),
-                                },
-                                {
-                                  "key": '사무실전화',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.officePhone),
-                                  ),
-                                },
-                                {
-                                  "key": 'Email',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.email),
-                                  ),
-                                },
-                                {
-                                  "key": '보좌관',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.aide),
-                                  ),
-                                },
-                                {
-                                  "key": '선임비서관',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.chiefOfStaff),
-                                  ),
-                                },
-                                {
-                                  "key": '비서관',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.secretary),
-                                  ),
-                                },
-                                {
-                                  "key": '의원실안내',
-                                  "value": Text(
-                                    renderEmptyString(state.data!.officeGuide),
-                                  ),
-                                },
-                              ],
-                            ),
-                          ],
+                                  },
+                                  {
+                                    "key": '당선횟수',
+                                    "value": Text(
+                                      renderEmptyString(
+                                        result.electionCount,
+                                      ),
+                                    ),
+                                  },
+                                  {
+                                    "key": '의원 홈페이지',
+                                    "value": GestureDetector(
+                                      onTap: () =>
+                                          _onLinkTap(result.memberHomepage),
+                                      child: Text(
+                                        renderEmptyString(
+                                          result.memberHomepage,
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ),
+                                  },
+                                  {
+                                    "key": '개별 홈페이지',
+                                    "value": GestureDetector(
+                                      onTap: () => _onLinkTap(
+                                        result.individualHomepage,
+                                      ),
+                                      child: Text(
+                                        renderEmptyString(
+                                          result.individualHomepage,
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ),
+                                  },
+                                  {
+                                    "key": '사무실전화',
+                                    "value": Text(
+                                      renderEmptyString(result.officePhone),
+                                    ),
+                                  },
+                                  {
+                                    "key": 'Email',
+                                    "value": Text(
+                                      renderEmptyString(result.email),
+                                    ),
+                                  },
+                                  {
+                                    "key": '보좌관',
+                                    "value": Text(
+                                      renderEmptyString(result.aide),
+                                    ),
+                                  },
+                                  {
+                                    "key": '선임비서관',
+                                    "value": Text(
+                                      renderEmptyString(result.chiefOfStaff),
+                                    ),
+                                  },
+                                  {
+                                    "key": '비서관',
+                                    "value": Text(
+                                      renderEmptyString(result.secretary),
+                                    ),
+                                  },
+                                  {
+                                    "key": '의원실안내',
+                                    "value": Text(
+                                      renderEmptyString(result.officeGuide),
+                                    ),
+                                  },
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SliverPersistentHeader(
-                    delegate: PersistentTabBar(candidate: state.data!),
-                    pinned: true,
-                  ),
-                ];
-              },
-              body: Container(
-                decoration: const BoxDecoration(color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: Sizes.size12,
-                    horizontal: Sizes.size24,
-                  ),
-                  child: TabBarView(
-                    children: [
-                      _billsPage(BillTypeEnum.bills), // 대표발의 법안 페이지
-                      _billsPage(BillTypeEnum.collabils), // 공동발의 법안 페이지
-                    ],
+                    SliverPersistentHeader(
+                      delegate: PersistentTabBar(candidate: result),
+                      pinned: true,
+                    ),
+                  ];
+                },
+                body: Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Sizes.size12,
+                      horizontal: Sizes.size24,
+                    ),
+                    child: TabBarView(
+                      children: [
+                        _billsPage(BillTypeEnum.bills), // 대표발의 법안 페이지
+                        _billsPage(BillTypeEnum.collabils), // 공동발의 법안 페이지
+                      ],
+                    ),
                   ),
                 ),
               ),
