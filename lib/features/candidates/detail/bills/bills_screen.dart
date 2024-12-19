@@ -18,12 +18,11 @@ enum BillTypeEnum { bills, collabils }
 class BillsScreen extends StatefulWidget {
   static String routeName = '/candidates/:id/bills';
   final String id;
-  BillStatusEnum? currentStatus;
   late BillTypeEnum? type;
+
   BillsScreen({
     super.key,
     this.type = BillTypeEnum.bills,
-    this.currentStatus,
     required this.id,
   });
 
@@ -32,7 +31,8 @@ class BillsScreen extends StatefulWidget {
 }
 
 class _BillsScreenState extends State<BillsScreen> {
-  BillStatusEnum filterValue = BillStatusEnum.passed;
+  final _scrollController = ScrollController();
+  BillStatusEnum filterValue = BillStatusEnum.all;
 
   int filterStatus(String status) {
     final query = getCandidateByIdQuery(id: widget.id);
@@ -51,11 +51,49 @@ class _BillsScreenState extends State<BillsScreen> {
   void _onFilterTap(BillStatusEnum value) {
     setState(() {
       filterValue = value;
+      final query = getCandidatesBillsInfiniteQuery(
+        id: widget.id,
+        status: filterValue,
+        type: widget.type,
+      );
     });
   }
 
   void _onListTileTap() {
-    context.push('/candidates/${widget.id}/bills?type=${widget.type}');
+    context.push('/candidates/${widget.id}/bills/:billId'); // TODO: billId 적용
+  }
+
+  void _onScroll() {
+    final query = getCandidatesBillsInfiniteQuery(
+      id: widget.id,
+      status: filterValue,
+      type: widget.type,
+    );
+    if (_isBottom && query.state.status != QueryStatus.loading) {
+      query.getNextPage();
+    }
+  }
+
+  // 최하단 판별
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.8);
+  }
+
+  @override
+  void initState() {
+    _scrollController.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
   }
 
   @override
@@ -65,11 +103,13 @@ class _BillsScreenState extends State<BillsScreen> {
       builder: (BuildContext context, QueryState<Candidate> state) {
         return Scaffold(
           appBar: BillAppBar(
-            title: Text(state.data?.koName ?? ''),
+            title:
+                Text('${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의 상세'),
           ),
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
             child: CustomScrollView(
+              controller: _scrollController,
               slivers: [
                 SliverToBoxAdapter(
                   child: Hero(
@@ -98,7 +138,7 @@ class _BillsScreenState extends State<BillsScreen> {
                   children: [
                     Gaps.v24,
                     Text(
-                      '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의 상세',
+                      '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: Sizes.size18,

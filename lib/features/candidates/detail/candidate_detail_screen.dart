@@ -34,7 +34,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   late Future<Candidate> featureCandidate;
   late int billsCount;
   late int collabillsCount;
-  BillTypeEnum billType = BillTypeEnum.bills;
 
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
@@ -60,7 +59,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   void _onBillsTap(BillTypeEnum type) {
-    context.push('/candidates/${widget.id}/bills?type=$billType&');
+    context.push(
+        '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}');
   }
 
   Widget _billsPage(BillTypeEnum type) {

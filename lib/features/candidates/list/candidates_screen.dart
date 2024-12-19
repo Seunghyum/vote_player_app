@@ -49,7 +49,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     }
   }
 
-// 최하단 판별
+  // 최하단 판별
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
     final maxScroll = _scrollController.position.maxScrollExtent;
