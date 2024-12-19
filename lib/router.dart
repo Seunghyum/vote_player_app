@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/bill_detail_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/candidate_detail_screen.dart';
 import 'package:vote_player_app/features/candidates/list/candidates_screen.dart';
 import 'package:vote_player_app/features/main_navigation/main_navigation_screen.dart';
@@ -28,6 +29,15 @@ final router = GoRouter(
                         ? BillTypeEnum.collabils
                         : BillTypeEnum.bills,
                   ),
+                  routes: [
+                    GoRoute(
+                      path: ':billNo',
+                      builder: (context, state) => BillDetailScreen(
+                        candidateId: state.pathParameters['id']!,
+                        billNo: state.pathParameters['billNo']!,
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),

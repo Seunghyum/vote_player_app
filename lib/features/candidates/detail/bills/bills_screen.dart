@@ -59,8 +59,8 @@ class _BillsScreenState extends State<BillsScreen> {
     });
   }
 
-  void _onListTileTap() {
-    context.push('/candidates/${widget.id}/bills/:billId'); // TODO: billId 적용
+  void _onListTileTap(String billNo) {
+    context.push('/candidates/${widget.id}/bills/${billNo}'); // TODO: billId 적용
   }
 
   void _onScroll() {
@@ -178,7 +178,7 @@ class _BillsScreenState extends State<BillsScreen> {
                             ...list!.expand((page) {
                               return page.result.map((item) {
                                 return ListTile(
-                                  onTap: () => _onListTileTap(),
+                                  onTap: () => _onListTileTap(item.billNo),
                                   leading: BillStatusLabel(
                                     status: getBillStatus(item.status),
                                   ),

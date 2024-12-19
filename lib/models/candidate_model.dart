@@ -88,6 +88,7 @@ class Candidate {
 }
 
 class Bill {
+  String id;
   String nth;
   String name;
   String proposers;
@@ -99,6 +100,7 @@ class Bill {
   String billNo;
 
   Bill({
+    required this.id,
     required this.nth,
     required this.name,
     required this.proposers,
@@ -111,6 +113,7 @@ class Bill {
   });
 
   factory Bill.fromJson(Map<String, dynamic> json) => Bill(
+        id: json["id"] ?? '',
         nth: json["nth"] ?? '',
         name: json["name"] ?? '',
         proposers: json["proposers"] ?? '',

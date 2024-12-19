@@ -52,12 +52,14 @@ class CandidatesBillsService {
     }
   }
 
-  Future<Candidate> getCandidateById(
-    String id,
+  Future<Bill> getBillByIdWithCandidateId(
+    String candidateId,
+    String billId,
   ) async {
     try {
-      String? path = '${dotenv.env['API_PATH']}/candidates/$id';
-
+      String? path =
+          '${dotenv.env['API_PATH']}/candidates/$candidateId/bills/$billId';
+      print('@@@@@ path : $path');
       final url = Uri.parse(
         path,
       );
@@ -68,7 +70,7 @@ class CandidatesBillsService {
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
 
-      return Candidate.fromJson(data);
+      return Bill.fromJson(data);
     } catch (err) {
       throw 'err';
     }
@@ -136,4 +138,15 @@ class CandidatesBillsSummary {
     required this.isLastPage,
     required this.allTotal,
   });
+}
+
+Query<Bill> getBillByIdWithCandidateIdQuery({
+  required String candidateId,
+  required String billNo,
+}) {
+  return Query<Bill>(
+    key: 'candidate-$candidateId-bill-$billNo',
+    queryFn: () => CandidatesBillsService()
+        .getBillByIdWithCandidateId(candidateId, billNo),
+  );
 }
