@@ -33,8 +33,11 @@ final router = GoRouter(
                     GoRoute(
                       path: ':billNo',
                       builder: (context, state) => BillDetailScreen(
-                        candidateId: state.pathParameters['id']!,
-                        billNo: state.pathParameters['billNo']!,
+                        type: state.uri.queryParameters['type'] == 'collabills'
+                            ? BillTypeEnum.collabils
+                            : BillTypeEnum.bills,
+                        candidateId: state.pathParameters['id'] ?? '',
+                        billNo: state.pathParameters['billNo'] ?? '',
                       ),
                     )
                   ],

@@ -104,7 +104,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         ),
                       ),
                     ),
-                  if (allPosts != null) ...[
+                  if (allPosts!.isNotEmpty) ...[
                     SliverAppBar(
                       elevation: 1,
                       title: Padding(

@@ -76,6 +76,7 @@ InfiniteQuery<CandidatesResponse, int> getCandidatesInfiniteQuery({
       if (state.lastPage?.summary.isLastPage ?? false) return null;
       return state.length + 1;
     },
+    initialData: [],
     queryFn: (arg) =>
         CandidatesService().getCandidates(page: page ?? arg, koName: koName),
   );

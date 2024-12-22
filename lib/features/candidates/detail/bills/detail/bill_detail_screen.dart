@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
@@ -14,10 +15,12 @@ import 'package:vote_player_app/utils/url.dart';
 
 class BillDetailScreen extends StatefulWidget {
   static String routeName = '/candidates/:id/bills/:billNo';
+  final BillTypeEnum type;
   final String candidateId;
   final String billNo;
   const BillDetailScreen({
     super.key,
+    required this.type,
     required this.candidateId,
     required this.billNo,
   });
@@ -42,6 +45,7 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
       ),
       body: QueryBuilder(
         query: getBillByIdWithCandidateIdQuery(
+          type: widget.type,
           candidateId: widget.candidateId,
           billNo: widget.billNo,
         ),
@@ -60,9 +64,10 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                       "key": '법안상태',
                       "value": Row(
                         children: [
-                          BillStatusLabel(
-                            status: getBillStatus(state.data?.status ?? ''),
-                          ),
+                          if (state.data != null && state.data?.status != '')
+                            BillStatusLabel(
+                              status: getBillStatus(state.data!.status),
+                            ),
                         ],
                       ),
                     },
