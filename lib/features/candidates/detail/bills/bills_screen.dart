@@ -136,14 +136,6 @@ class _BillsScreenState extends State<BillsScreen> {
                 ),
                 SliverList.list(
                   children: [
-                    Gaps.v24,
-                    Text(
-                      '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Sizes.size18,
-                      ),
-                    ),
                     const Divider(),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,

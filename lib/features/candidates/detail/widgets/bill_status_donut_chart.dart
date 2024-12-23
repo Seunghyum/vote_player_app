@@ -34,7 +34,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.2,
+      aspectRatio: 1.4,
       child: Row(
         children: [
           Expanded(
@@ -65,7 +65,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
             width: Sizes.size12,
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               BillChartIndicator(
@@ -116,9 +116,6 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
                 text: BillStatusEnum.rejected.koreanName,
                 isSquare: true,
               ),
-              const SizedBox(
-                height: 60,
-              ),
             ],
           ),
           const SizedBox(
@@ -149,7 +146,14 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
       final dispose = widget.dispose ?? 0;
       final withdrawal = widget.withdrawal ?? 0;
       final rejected = widget.rejected ?? 0;
-      final sum = pending + passed + amendmentPassed + alternativePassed;
+      final sum = pending +
+          passed +
+          amendmentPassed +
+          alternativePassed +
+          termExpiration +
+          dispose +
+          withdrawal +
+          rejected;
       final pendingPer = (pending / sum * 100).round();
       final passedPer = (passed / sum * 100).round();
       final amendmentPassedPer = (amendmentPassed / sum * 100).round();
