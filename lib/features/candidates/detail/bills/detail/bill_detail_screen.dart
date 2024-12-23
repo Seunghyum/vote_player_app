@@ -50,67 +50,69 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
           billNo: widget.billNo,
         ),
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.size12),
-            child: Column(
-              children: [
-                ListTable(
-                  data: [
-                    {
-                      "key": '법안명',
-                      "value": Text(state.data?.name ?? ''),
-                    },
-                    {
-                      "key": '법안상태',
-                      "value": Row(
-                        children: [
-                          if (state.data != null && state.data?.status != '')
-                            BillStatusLabel(
-                              status: getBillStatus(state.data!.status),
-                            ),
-                        ],
-                      ),
-                    },
-                    {
-                      "key": '위원회',
-                      "value": Text(state.data?.committee ?? ''),
-                    },
-                    {
-                      "key": '제안자',
-                      "value": Text(state.data?.proposers ?? ''),
-                    },
-                    {
-                      "key": '제안일자',
-                      "value": Text(
-                        DateFormat('yyyy.MM.dd')
-                            .format(state.data?.date ?? DateTime.now()),
-                      ),
-                    },
-                    {
-                      "key": '국회 홈페이지',
-                      "value": GestureDetector(
-                        onTap: () =>
-                            _onLinkTap(state.data?.billDetailUrl ?? ''),
-                        child: const Row(
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Sizes.size12),
+              child: Column(
+                children: [
+                  ListTable(
+                    data: [
+                      {
+                        "key": '법안명',
+                        "value": Text(state.data?.name ?? ''),
+                      },
+                      {
+                        "key": '법안상태',
+                        "value": Row(
                           children: [
-                            Text(
-                              '국회 홈페이지 바로가기 ',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                            Icon(
-                              Icons.open_in_new,
-                              size: Sizes.size16,
-                              color: Colors.blue,
-                            ),
+                            if (state.data != null && state.data?.status != '')
+                              BillStatusLabel(
+                                status: getBillStatus(state.data!.status),
+                              ),
                           ],
                         ),
-                      ),
-                    },
-                  ],
-                ),
-                Gaps.h16,
-                Html(data: state.data?.summary ?? ''),
-              ],
+                      },
+                      {
+                        "key": '위원회',
+                        "value": Text(state.data?.committee ?? ''),
+                      },
+                      {
+                        "key": '제안자',
+                        "value": Text(state.data?.proposers ?? ''),
+                      },
+                      {
+                        "key": '제안일자',
+                        "value": Text(
+                          DateFormat('yyyy.MM.dd')
+                              .format(state.data?.date ?? DateTime.now()),
+                        ),
+                      },
+                      {
+                        "key": '국회 홈페이지',
+                        "value": GestureDetector(
+                          onTap: () =>
+                              _onLinkTap(state.data?.billDetailUrl ?? ''),
+                          child: const Row(
+                            children: [
+                              Text(
+                                '국회 홈페이지 바로가기 ',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              Icon(
+                                Icons.open_in_new,
+                                size: Sizes.size16,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                        ),
+                      },
+                    ],
+                  ),
+                  Gaps.h16,
+                  Html(data: state.data?.summary ?? ''),
+                ],
+              ),
             ),
           );
         },
