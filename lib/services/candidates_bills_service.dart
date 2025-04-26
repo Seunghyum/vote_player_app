@@ -57,11 +57,8 @@ class CandidatesBillsService {
     String billId,
   ) async {
     try {
-      print("@@@@@@ candidateId : $candidateId");
-      print("@@@@@@ billId : $billId");
       String? path =
           '${dotenv.env['API_PATH']}/candidates/$candidateId/bills/$billId?type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}';
-      print("@@@@@@ path : $path");
       final url = Uri.parse(
         path,
       );

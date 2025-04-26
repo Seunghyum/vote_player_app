@@ -28,11 +28,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         children: [
           Offstage(
             offstage: _selectedIndex != 0,
-            child: const RegionScreen(),
+            child: const CandidatesScreen(),
           ),
           Offstage(
-            offstage: _selectedIndex != 0,
-            child: const CandidatesScreen(),
+            offstage: _selectedIndex != 1,
+            child: const RegionScreen(),
           ),
         ],
       ),

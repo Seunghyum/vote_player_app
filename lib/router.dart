@@ -4,6 +4,7 @@ import 'package:vote_player_app/features/candidates/detail/bills/detail/bill_det
 import 'package:vote_player_app/features/candidates/detail/candidate_detail_screen.dart';
 import 'package:vote_player_app/features/candidates/list/candidates_screen.dart';
 import 'package:vote_player_app/features/main_navigation/main_navigation_screen.dart';
+import 'package:vote_player_app/features/region/region_screen.dart';
 
 final router = GoRouter(
   routes: [
@@ -46,6 +47,10 @@ final router = GoRouter(
             ),
           ],
         ),
+        GoRoute(
+          path: 'region',
+          builder: (context, state) => const RegionScreen(),
+        )
       ],
     ),
   ],

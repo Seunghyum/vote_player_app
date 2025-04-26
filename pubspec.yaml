@@ -49,6 +49,7 @@ dependencies:
   cached_query_flutter: ^2.5.1
   cached_storage: ^2.0.14
   skeletonizer: ^1.4.2
+  geolocator: ^13.0.2
 
 dev_dependencies:
   flutter_test:
