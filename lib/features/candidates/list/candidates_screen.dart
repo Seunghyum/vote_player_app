@@ -104,30 +104,30 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         ),
                       ),
                     ),
-                  if (allPosts!.isNotEmpty) ...[
-                    SliverAppBar(
-                      elevation: 1,
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.size10,
-                        ),
-                        child: CandidateSearchInput(
-                          placeholder: "이름",
-                          onChanged: _onInputChanged,
-                        ),
+                  SliverAppBar(
+                    elevation: 1,
+                    title: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Sizes.size10,
+                      ),
+                      child: CandidateSearchInput(
+                        placeholder: "이름",
+                        onChanged: _onInputChanged,
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.size32,
-                        ),
-                        child: Text(
-                          '${allPosts[0].summary.total}개의 결과',
-                          textAlign: TextAlign.end,
-                        ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Sizes.size32,
+                      ),
+                      child: Text(
+                        '${allPosts!.isNotEmpty ? allPosts[0].summary.total : 0}개의 결과',
+                        textAlign: TextAlign.end,
                       ),
                     ),
+                  ),
+                  if (allPosts.isNotEmpty)
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, i) {
@@ -176,7 +176,6 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                         childCount: allPosts.length,
                       ),
                     ),
-                  ],
                   if (state.status == QueryStatus.loading)
                     const SliverToBoxAdapter(
                       child: Center(
