@@ -60,7 +60,7 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   void _onListTileTap(String billNo) {
-    context.push('/candidates/${widget.id}/bills/${billNo}'); // TODO: billId 적용
+    context.push('/candidates/${widget.id}/bills/$billNo'); // TODO: billId 적용
   }
 
   void _onScroll() {
@@ -103,8 +103,9 @@ class _BillsScreenState extends State<BillsScreen> {
       builder: (BuildContext context, QueryState<Candidate> state) {
         return Scaffold(
           appBar: BillAppBar(
-            title:
-                Text('${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의 상세'),
+            title: Text(
+              '${widget.type == BillTypeEnum.bills ? '대표' : '공동'}발의 상세',
+            ),
           ),
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),

@@ -22,7 +22,9 @@ class CandidatesService {
         path,
       );
       CandidatesResponse cr = CandidatesResponse(
-          result: [], summary: CandidatesSummary(total: 0, isLastPage: true));
+        result: [],
+        summary: CandidatesSummary(total: 0, isLastPage: true),
+      );
 
       final response = await http.get(url);
       final statusCode = response.statusCode;
@@ -30,8 +32,9 @@ class CandidatesService {
       final data = jsonDecode(response.body);
 
       cr.summary = CandidatesSummary(
-          total: data['summary']['total'],
-          isLastPage: data['summary']['isLastPage']);
+        total: data['summary']['total'],
+        isLastPage: data['summary']['isLastPage'],
+      );
       for (var candidate in data['result']) {
         cr.result.add(Candidate.fromJson(candidate));
       }
