@@ -7,10 +7,12 @@ List<String> tabs = ['대표발의', '공동발의'];
 class PersistentTabBar extends SliverPersistentHeaderDelegate {
   final int billsCount;
   final int collabillsCount;
-  const PersistentTabBar(
-      {required this.collabillsCount, required this.billsCount});
+  const PersistentTabBar({
+    required this.collabillsCount,
+    required this.billsCount,
+  });
 
-  Widget _menuTab({required String title, required int count}) {
+  Widget _menuTab({required String title, int? count}) {
     return Tab(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
@@ -21,7 +23,7 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
               textAlign: TextAlign.center,
             ),
             Text(
-              '(${count.toString()})',
+              count != null ? '(${count.toString()})' : '',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontStyle: FontStyle.italic,
@@ -59,12 +61,10 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
         tabs: [
           _menuTab(
             title: '대표법안',
-            count: billsCount,
           ),
           _menuTab(
             title: '공동발의',
-            count: collabillsCount,
-          ) // TODO
+          ), // TODO
         ],
       ),
     );
