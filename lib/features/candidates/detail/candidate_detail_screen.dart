@@ -9,6 +9,7 @@ import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.da
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/nth_tab.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/persistent_tabbar.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
@@ -34,6 +35,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   late Future<Candidate> featureCandidate;
   late int billsCount;
   late int collabillsCount;
+  String nth = '';
 
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
@@ -52,33 +54,80 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         ? query.state.data?.billsStatusStatistics
         : query.state.data?.collabillsStatusStatistics;
     return target
-            ?.firstWhere((element) => element.name == status,
-                orElse: () => BillsStatisticsItem(name: status, value: 0))
+            ?.firstWhere(
+              (element) => element.name == status && element.nth == nth,
+              orElse: () =>
+                  BillsStatisticsItem(name: status, value: 0, nth: ''),
+            )
             .value ??
         0;
   }
 
-  void _onBillsTap(BillTypeEnum type) {
-    context.push(
-        '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}');
+  List<String> getNthList() {
+    final query = getCandidateByIdQuery(id: widget.id);
+    return query.state.data?.billsNthStatistics ?? [];
   }
 
-  Widget _billsPage(BillTypeEnum type) {
+  void _onBillsTap(BillTypeEnum type) {
+    print("@@@@ !!!! $nth ");
+    context.push(
+      '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}&nth=$nth',
+    );
+  }
+
+  void _onNthTap(String str) {
+    setState(() {
+      nth = str;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final query = getCandidateByIdQuery(id: widget.id);
+    nth = query.state.data?.billsNthStatistics.first ?? '';
+  }
+
+  Widget _billsPage({required BillTypeEnum type}) {
     final typeText = type == BillTypeEnum.bills ? '대표' : '공동';
     final query = getCandidateByIdQuery(id: widget.id);
     final candidate = query.state.data;
 
+    if (nth == '') nth = query.state.data?.billsNthStatistics.first ?? '';
+
     // NOTE 빌드 타임에 실행되므로 setState 없이 실행
-    billsCount = (candidate?.billsStatistics ?? [])
-        .fold(0, (sum, next) => sum + next.value);
-    collabillsCount = (candidate?.collabillsStatistics ?? [])
-        .fold(0, (sum, next) => sum + next.value);
+    Iterable<BillsStatisticsItem> billsCommitteeStatistics =
+        (candidate?.billsCommitteeStatistics ?? []).where(
+      (element) => element.nth == nth,
+    );
+    billsCount =
+        billsCommitteeStatistics.fold(0, (sum, next) => sum + next.value);
+
+    Iterable<BillsStatisticsItem> collabillsCommitteeStatistics =
+        (candidate?.collabillsCommitteeStatistics ?? []).where(
+      (element) => element.nth == nth,
+    );
+    collabillsCount =
+        collabillsCommitteeStatistics.fold(0, (sum, next) => sum + next.value);
 
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        Stack(
+        Column(
           children: [
+            Row(
+              children: [
+                ...(query.state.data?.billsNthStatistics ?? []).map(
+                  (e) => GestureDetector(
+                    onTap: () => _onNthTap(e),
+                    child: NthTab(
+                      nth: nth,
+                      text: e,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             GestureDetector(
               onTap: () => _onBillsTap(type),
               child: AbsorbPointer(
@@ -166,8 +215,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                     ),
                     const Divider(),
                     ...(candidate != null
-                        ? candidate.collabillsStatistics
-                            .where((element) => element.name.isNotEmpty)
+                        ? (typeText == '대표'
+                                ? billsCommitteeStatistics
+                                : collabillsCommitteeStatistics)
+                            .where(
+                              (element) => element.name.isNotEmpty,
+                            )
                             .map(
                               (bs) => ListTile(
                                 title: Row(
@@ -199,8 +252,9 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                   child: Text(
                                     '${bs.value}회',
                                     textAlign: TextAlign.center,
-                                    style:
-                                        const TextStyle(fontSize: Sizes.size16),
+                                    style: const TextStyle(
+                                      fontSize: Sizes.size16,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -242,11 +296,13 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
               partyName: "xxxxx",
               memberHomepage: 'xxxxxx xxx xxxxxx xxxxxx',
               bills: [],
-              billsStatistics: [],
+              billsCommitteeStatistics: [],
               collabills: [],
-              collabillsStatistics: [],
+              collabillsCommitteeStatistics: [],
               billsStatusStatistics: [],
               collabillsStatusStatistics: [],
+              billsNthStatistics: [],
+              collabillsNthStatistics: [],
             );
         return Skeletonizer(
           enabled: isLoading,
@@ -401,8 +457,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                     ),
                     child: TabBarView(
                       children: [
-                        _billsPage(BillTypeEnum.bills), // 대표발의 법안 페이지
-                        _billsPage(BillTypeEnum.collabils), // 공동발의 법안 페이지
+                        _billsPage(type: BillTypeEnum.bills), // 대표발의 법안 페이지
+                        _billsPage(type: BillTypeEnum.collabils), // 공동발의 법안 페이지
                       ],
                     ),
                   ),

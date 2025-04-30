@@ -14,10 +14,12 @@ class Candidate {
   String officeGuide = '';
   List<Bill> bills;
   List<Bill> collabills;
-  List<BillsStatisticsItem> billsStatistics;
-  List<BillsStatisticsItem> collabillsStatistics;
+  List<BillsStatisticsItem> billsCommitteeStatistics;
+  List<BillsStatisticsItem> collabillsCommitteeStatistics;
   List<BillsStatisticsItem> billsStatusStatistics;
   List<BillsStatisticsItem> collabillsStatusStatistics;
+  List<String> billsNthStatistics;
+  List<String> collabillsNthStatistics;
 
   Candidate({
     required this.id,
@@ -39,10 +41,12 @@ class Candidate {
     required this.partyName,
     required this.bills,
     required this.collabills,
-    required this.billsStatistics,
-    required this.collabillsStatistics,
+    required this.billsCommitteeStatistics,
+    required this.collabillsCommitteeStatistics,
     required this.billsStatusStatistics,
     required this.collabillsStatusStatistics,
+    required this.billsNthStatistics,
+    required this.collabillsNthStatistics,
   });
   factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
         id: json["_id"] ?? '',
@@ -68,12 +72,12 @@ class Candidate {
         collabills: List<Bill>.from(
           (json["collabills"] ?? []).map((x) => Bill.fromJson(x)),
         ),
-        billsStatistics: List<BillsStatisticsItem>.from(
-          (json['billsStatistics'] ?? [])
+        billsCommitteeStatistics: List<BillsStatisticsItem>.from(
+          (json['billsCommitteeStatistics'] ?? [])
               .map((x) => BillsStatisticsItem.fromJson(x)),
         ),
-        collabillsStatistics: List<BillsStatisticsItem>.from(
-          (json['collabillsStatistics'] ?? [])
+        collabillsCommitteeStatistics: List<BillsStatisticsItem>.from(
+          (json['collabillsCommitteeStatistics'] ?? [])
               .map((x) => BillsStatisticsItem.fromJson(x)),
         ),
         billsStatusStatistics: List<BillsStatisticsItem>.from(
@@ -84,6 +88,9 @@ class Candidate {
           (json['collabillsStatusStatistics'] ?? [])
               .map((x) => BillsStatisticsItem.fromJson(x)),
         ),
+        billsNthStatistics: List.from(json['billsNthStatistics'] ?? []),
+        collabillsNthStatistics:
+            List.from(json['collabillsNthStatistics'] ?? []),
       );
 }
 
@@ -127,16 +134,19 @@ class Bill {
 }
 
 class BillsStatisticsItem {
+  String nth;
   String name;
   int value;
 
   BillsStatisticsItem({
+    required this.nth,
     required this.name,
     required this.value,
   });
 
   factory BillsStatisticsItem.fromJson(Map<String, dynamic> json) =>
       BillsStatisticsItem(
+        nth: json["nth"] ?? '',
         name: json["name"] ?? '',
         value: json["value"] ?? 0,
       );

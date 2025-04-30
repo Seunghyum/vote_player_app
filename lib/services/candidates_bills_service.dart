@@ -13,14 +13,15 @@ class CandidatesBillsService {
   Future<CandidatesBillsResponse> getCandidatesBillsById({
     required String id,
     required BillStatusEnum status,
+    required String? nth,
     BillTypeEnum? type = BillTypeEnum.bills,
     int page = 0,
     int pageCount = 15,
   }) async {
     try {
       String? path =
-          '${dotenv.env['API_PATH']}/candidates/$id/bills?status=${status.koreanName}&type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}&page=$page&pageCount=$pageCount';
-
+          '${dotenv.env['API_PATH']}/candidates/$id/bills?status=${status.koreanName}&type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}&page=$page&pageCount=$pageCount&nth=$nth';
+      print("@@@@@ $path");
       final url = Uri.parse(
         path,
       );
@@ -79,12 +80,13 @@ class CandidatesBillsService {
 InfiniteQuery<CandidatesBillsResponse, int> getCandidatesBillsInfiniteQuery({
   required String id,
   required BillStatusEnum status,
+  required String? nth,
   BillTypeEnum? type = BillTypeEnum.bills,
   int? page,
   int pageCount = 15,
 }) {
   return InfiniteQuery<CandidatesBillsResponse, int>(
-    key: 'candidates-bills-$id-$status',
+    key: 'candidates-bills-$id-$status-$nth',
     getNextArg: (state) {
       if (state.lastPage?.summary.isLastPage ?? false) return null;
       return state.length + 1;
@@ -93,6 +95,7 @@ InfiniteQuery<CandidatesBillsResponse, int> getCandidatesBillsInfiniteQuery({
       return CandidatesBillsService().getCandidatesBillsById(
         id: id,
         status: status,
+        nth: nth,
         type: type,
         pageCount: pageCount,
         page: page ?? arg,

@@ -26,6 +26,7 @@ final router = GoRouter(
                   path: 'bills',
                   builder: (context, state) => BillsScreen(
                     id: state.pathParameters['id']!,
+                    nth: state.uri.queryParameters['nth'] ?? '22대',
                     type: state.uri.queryParameters['type'] == 'collabills'
                         ? BillTypeEnum.collabils
                         : BillTypeEnum.bills,
@@ -40,7 +41,7 @@ final router = GoRouter(
                         candidateId: state.pathParameters['id'] ?? '',
                         billNo: state.pathParameters['billNo'] ?? '',
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -50,7 +51,7 @@ final router = GoRouter(
         GoRoute(
           path: 'region',
           builder: (context, state) => const RegionScreen(),
-        )
+        ),
       ],
     ),
   ],

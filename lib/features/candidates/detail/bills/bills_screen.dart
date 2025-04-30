@@ -7,6 +7,7 @@ import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_ap
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/nth_tab.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
 import 'package:vote_player_app/services/candidates_bills_service.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
@@ -19,10 +20,12 @@ class BillsScreen extends StatefulWidget {
   static String routeName = '/candidates/:id/bills';
   final String id;
   late BillTypeEnum? type;
+  final String nth;
 
   BillsScreen({
     super.key,
     this.type = BillTypeEnum.bills,
+    required this.nth,
     required this.id,
   });
 
@@ -33,6 +36,7 @@ class BillsScreen extends StatefulWidget {
 class _BillsScreenState extends State<BillsScreen> {
   final _scrollController = ScrollController();
   BillStatusEnum filterValue = BillStatusEnum.all;
+  String nth = '';
 
   int filterStatus(String status) {
     final query = getCandidateByIdQuery(id: widget.id);
@@ -41,8 +45,9 @@ class _BillsScreenState extends State<BillsScreen> {
         : query.state.data?.collabillsStatusStatistics;
     return target
             ?.firstWhere(
-              (element) => element.name == status,
-              orElse: () => BillsStatisticsItem(name: status, value: 0),
+              (element) => element.name == status && element.nth == nth,
+              orElse: () =>
+                  BillsStatisticsItem(name: status, value: 0, nth: ''),
             )
             .value ??
         0;
@@ -54,6 +59,7 @@ class _BillsScreenState extends State<BillsScreen> {
       final query = getCandidatesBillsInfiniteQuery(
         id: widget.id,
         status: filterValue,
+        nth: nth,
         type: widget.type,
       );
     });
@@ -67,6 +73,7 @@ class _BillsScreenState extends State<BillsScreen> {
     final query = getCandidatesBillsInfiniteQuery(
       id: widget.id,
       status: filterValue,
+      nth: nth,
       type: widget.type,
     );
     if (_isBottom && query.state.status != QueryStatus.loading) {
@@ -82,9 +89,18 @@ class _BillsScreenState extends State<BillsScreen> {
     return currentScroll >= (maxScroll * 0.8);
   }
 
+  void _onNthTap(String str) {
+    setState(() {
+      nth = str;
+    });
+  }
+
   @override
   void initState() {
     _scrollController.addListener(_onScroll);
+    setState(() {
+      nth = widget.nth ?? '22대';
+    });
     super.initState();
   }
 
@@ -112,6 +128,21 @@ class _BillsScreenState extends State<BillsScreen> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      ...(state.data?.billsNthStatistics ?? []).map(
+                        (e) => GestureDetector(
+                          onTap: () => _onNthTap(e),
+                          child: NthTab(
+                            nth: nth,
+                            text: e,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SliverToBoxAdapter(
                   child: Hero(
                     tag:
@@ -162,6 +193,7 @@ class _BillsScreenState extends State<BillsScreen> {
                       query: getCandidatesBillsInfiniteQuery(
                         id: widget.id,
                         status: filterValue,
+                        nth: nth,
                         type: widget.type,
                       ),
                       builder: (context, state, query) {
