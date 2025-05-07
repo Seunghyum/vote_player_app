@@ -69,7 +69,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   void _onBillsTap(BillTypeEnum type) {
-    print("@@@@ !!!! $nth ");
     context.push(
       '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}&nth=$nth',
     );
@@ -238,10 +237,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                       offset: const Offset(20, 3.5),
                                       backgroundColor:
                                           Theme.of(context).primaryColor,
-                                      child: Text(
-                                        bs.name,
-                                        style: const TextStyle(
-                                          fontSize: Sizes.size16,
+                                      child: Flexible(
+                                        child: Text(
+                                          bs.name,
+                                          style: const TextStyle(
+                                            fontSize: Sizes.size16,
+                                          ),
                                         ),
                                       ),
                                     ),
