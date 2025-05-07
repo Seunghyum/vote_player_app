@@ -51,16 +51,16 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   int filterStatus(String status, BillTypeEnum type) {
     final query = getCandidateByIdQuery(id: widget.id);
     final target = type == BillTypeEnum.bills
-        ? query.state.data?.billsStatusStatistics
-        : query.state.data?.collabillsStatusStatistics;
+        ? (query.state.data?.billsStatusStatistics ?? [])
+        : (query.state.data?.collabillsStatusStatistics ?? []);
     return target
-            ?.firstWhere(
+            .firstWhere(
               (element) => element.name == status && element.nth == nth,
               orElse: () =>
                   BillsStatisticsItem(name: status, value: 0, nth: ''),
             )
             .value ??
-        0;
+        10;
   }
 
   List<String> getNthList() {
@@ -84,7 +84,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   void initState() {
     super.initState();
     final query = getCandidateByIdQuery(id: widget.id);
-    nth = query.state.data?.billsNthStatistics.first ?? '';
+    nth = query.state.data?.billsNthStatistics?.first ?? '';
   }
 
   Widget _billsPage({required BillTypeEnum type}) {
@@ -92,22 +92,26 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     final query = getCandidateByIdQuery(id: widget.id);
     final candidate = query.state.data;
 
-    if (nth == '') nth = query.state.data?.billsNthStatistics.first ?? '';
+    if (nth == '') nth = query.state.data?.billsNthStatistics?.first ?? '';
 
     // NOTE 빌드 타임에 실행되므로 setState 없이 실행
     Iterable<BillsStatisticsItem> billsCommitteeStatistics =
         (candidate?.billsCommitteeStatistics ?? []).where(
       (element) => element.nth == nth,
     );
-    billsCount =
-        billsCommitteeStatistics.fold(0, (sum, next) => sum + next.value);
+    billsCount = billsCommitteeStatistics.fold(
+      0,
+      (sum, next) => sum + (next.value ?? 0),
+    );
 
     Iterable<BillsStatisticsItem> collabillsCommitteeStatistics =
         (candidate?.collabillsCommitteeStatistics ?? []).where(
       (element) => element.nth == nth,
     );
-    collabillsCount =
-        collabillsCommitteeStatistics.fold(0, (sum, next) => sum + next.value);
+    collabillsCount = collabillsCommitteeStatistics.fold(
+      0,
+      (sum, next) => sum + (next.value ?? 0),
+    );
 
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
@@ -218,16 +222,16 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                 ? billsCommitteeStatistics
                                 : collabillsCommitteeStatistics)
                             .where(
-                              (element) => element.name.isNotEmpty,
+                              (element) => element.name!.isNotEmpty,
                             )
                             .map(
                               (bs) => ListTile(
                                 title: Row(
                                   children: [
                                     Badge(
-                                      isLabelVisible: candidate
-                                          .affiliatedCommittee
-                                          .contains(bs.name),
+                                      isLabelVisible:
+                                          (candidate.affiliatedCommittee ?? '')
+                                              .contains(bs.name!),
                                       label: const Text(
                                         '소속',
                                         style: TextStyle(
@@ -239,7 +243,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                           Theme.of(context).primaryColor,
                                       child: Flexible(
                                         child: Text(
-                                          bs.name,
+                                          bs.name!,
                                           style: const TextStyle(
                                             fontSize: Sizes.size16,
                                           ),
@@ -309,7 +313,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
           enabled: isLoading,
           child: Scaffold(
             appBar: BillAppBar(
-              title: Text(result.koName),
+              title: Text(result.koName ?? ''),
             ),
             body: DefaultTabController(
               length: tabs.length,
@@ -328,7 +332,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                 width: 150,
                                 height: 150,
                                 child: Hero(
-                                  tag: result.id,
+                                  tag: result.id ?? '',
                                   child: CircleAvatar(
                                     foregroundImage: NetworkImage(
                                       getS3ImageUrl(
@@ -346,7 +350,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                     "key": '소속 위원회',
                                     "value": Text(
                                       renderEmptyString(
-                                        result.affiliatedCommittee,
+                                        result.affiliatedCommittee ?? '',
                                       ),
                                     ),
                                   },
@@ -354,7 +358,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                     "key": '선거구',
                                     "value": Text(
                                       renderEmptyString(
-                                        result.electoralDistrict,
+                                        result.electoralDistrict ?? '',
                                       ),
                                     ),
                                   },
@@ -362,18 +366,19 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                     "key": '당선횟수',
                                     "value": Text(
                                       renderEmptyString(
-                                        result.electionCount,
+                                        result.electionCount ?? '',
                                       ),
                                     ),
                                   },
                                   {
                                     "key": '의원 홈페이지',
                                     "value": GestureDetector(
-                                      onTap: () =>
-                                          _onLinkTap(result.memberHomepage),
+                                      onTap: () => _onLinkTap(
+                                        result.memberHomepage ?? '',
+                                      ),
                                       child: Text(
                                         renderEmptyString(
-                                          result.memberHomepage,
+                                          result.memberHomepage ?? '',
                                         ),
                                         style: TextStyle(
                                           color: Colors.blue.shade700,
@@ -385,11 +390,11 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                     "key": '개별 홈페이지',
                                     "value": GestureDetector(
                                       onTap: () => _onLinkTap(
-                                        result.individualHomepage,
+                                        result.individualHomepage ?? '',
                                       ),
                                       child: Text(
                                         renderEmptyString(
-                                          result.individualHomepage,
+                                          result.individualHomepage ?? '',
                                         ),
                                         style: TextStyle(
                                           color: Colors.blue.shade700,
@@ -400,37 +405,43 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                                   {
                                     "key": '사무실전화',
                                     "value": Text(
-                                      renderEmptyString(result.officePhone),
+                                      renderEmptyString(
+                                        result.officePhone ?? '',
+                                      ),
                                     ),
                                   },
                                   {
                                     "key": 'Email',
                                     "value": Text(
-                                      renderEmptyString(result.email),
+                                      renderEmptyString(result.email ?? ''),
                                     ),
                                   },
                                   {
                                     "key": '보좌관',
                                     "value": Text(
-                                      renderEmptyString(result.aide),
+                                      renderEmptyString(result.aide ?? ''),
                                     ),
                                   },
                                   {
                                     "key": '선임비서관',
                                     "value": Text(
-                                      renderEmptyString(result.chiefOfStaff),
+                                      renderEmptyString(
+                                        result.chiefOfStaff ?? '',
+                                      ),
                                     ),
                                   },
                                   {
                                     "key": '비서관',
                                     "value": Text(
-                                      renderEmptyString(result.secretary),
+                                      renderEmptyString(result.secretary ?? ''),
                                     ),
                                   },
                                   {
                                     "key": '의원실안내',
                                     "value": Text(
-                                      renderEmptyString(result.officeGuide),
+                                      renderEmptyString(
+                                        result.officeGuide ?? '',
+                                      ),
                                     ),
                                   },
                                 ],

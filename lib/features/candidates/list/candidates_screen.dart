@@ -27,8 +27,9 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   final _scrollController = ScrollController();
 
   void _onListTileTap({
-    required String id,
+    required String? id,
   }) {
+    if (id!.isEmpty) throw const FormatException('id값이 없습니다');
     hideKeyboard(context);
     context.push('/candidates/$id');
   }
@@ -148,20 +149,20 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                                       id: item.id,
                                     ),
                                     leading: Hero(
-                                      tag: item.id,
+                                      tag: item.id ?? '',
                                       child: CircleAvatar(
                                         foregroundImage:
                                             NetworkImage(imagePath),
                                       ),
                                     ),
                                     title: Text(
-                                      item.koName,
+                                      item.koName ?? '',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     subtitle: Text(
-                                      item.electoralDistrict,
+                                      item.electoralDistrict ?? '',
                                     ),
                                     trailing: const Icon(
                                       Icons.chevron_right_sharp,

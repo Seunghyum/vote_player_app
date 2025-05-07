@@ -67,7 +67,7 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                           children: [
                             if (state.data != null && state.data?.status != '')
                               BillStatusLabel(
-                                status: getBillStatus(state.data!.status),
+                                status: getBillStatus(state.data!.status!),
                               ),
                           ],
                         ),

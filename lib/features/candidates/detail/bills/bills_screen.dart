@@ -1,7 +1,6 @@
 import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
@@ -20,7 +19,7 @@ class BillsScreen extends StatefulWidget {
   static String routeName = '/candidates/:id/bills';
   final String id;
   late BillTypeEnum? type;
-  final String nth;
+  final String? nth;
 
   BillsScreen({
     super.key,
@@ -43,14 +42,13 @@ class _BillsScreenState extends State<BillsScreen> {
     final target = widget.type == BillTypeEnum.bills
         ? query.state.data?.billsStatusStatistics
         : query.state.data?.collabillsStatusStatistics;
-    return target
-            ?.firstWhere(
-              (element) => element.name == status && element.nth == nth,
-              orElse: () =>
-                  BillsStatisticsItem(name: status, value: 0, nth: ''),
-            )
-            .value ??
-        0;
+    final value = target
+        ?.firstWhere(
+          (element) => element.name == status && element.nth == nth,
+          orElse: () => BillsStatisticsItem(name: status, value: 0, nth: ''),
+        )
+        .value;
+    return value!.isFinite ? value : 1;
   }
 
   void _onFilterTap(BillStatusEnum value) {
@@ -203,13 +201,13 @@ class _BillsScreenState extends State<BillsScreen> {
                             ...list!.expand((page) {
                               return page.result.map((item) {
                                 return ListTile(
-                                  onTap: () => _onListTileTap(item.billNo),
+                                  onTap: () => _onListTileTap(item.billNo!),
                                   leading: BillStatusLabel(
-                                    status: getBillStatus(item.status),
+                                    status: getBillStatus(item.status!),
                                   ),
                                   title: FractionallySizedBox(
                                     child: Text(
-                                      item.name,
+                                      item.name!,
                                       style: const TextStyle(
                                         overflow: TextOverflow.ellipsis,
                                         fontWeight: FontWeight.w600,
@@ -221,17 +219,17 @@ class _BillsScreenState extends State<BillsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(item.committee),
+                                      Text(item.committee!),
                                       Row(
                                         children: [
                                           Text(
-                                            item.nth,
+                                            item.nth!,
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
                                             ),
                                           ),
-                                          Text(' ${getyyyyMMdd(item.date)}~'),
+                                          Text(' ${getyyyyMMdd(item.date!)}~'),
                                         ],
                                       ),
                                     ],

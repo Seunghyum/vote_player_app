@@ -1,25 +1,36 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'candidate_model.g.dart';
+
+@JsonSerializable()
 class Candidate {
-  final String enName, koName, partyName, history, id;
-  String electoralDistrict = '';
-  String affiliatedCommittee = '';
-  String electionCount = '';
-  String officePhone = '';
-  String officeRoom = '';
-  String memberHomepage = '';
-  String individualHomepage = '';
-  String email = '';
-  String aide = '';
-  String chiefOfStaff = '';
-  String secretary = '';
-  String officeGuide = '';
-  List<Bill> bills;
-  List<Bill> collabills;
-  List<BillsStatisticsItem> billsCommitteeStatistics;
-  List<BillsStatisticsItem> collabillsCommitteeStatistics;
-  List<BillsStatisticsItem> billsStatusStatistics;
-  List<BillsStatisticsItem> collabillsStatusStatistics;
-  List<String> billsNthStatistics;
-  List<String> collabillsNthStatistics;
+  final String? enName;
+  final String? koName;
+  final String? partyName;
+  final String? history;
+
+  @JsonKey(name: '_id')
+  final String? id;
+  final String? electoralDistrict;
+  final String? affiliatedCommittee;
+  final String? electionCount;
+  final String? officePhone;
+  final String? officeRoom;
+  final String? memberHomepage;
+  final String? individualHomepage;
+  final String? email;
+  final String? aide;
+  final String? chiefOfStaff;
+  final String? secretary;
+  final String? officeGuide;
+  final List<Bill>? bills;
+  final List<Bill>? collabills;
+  final List<BillsStatisticsItem>? billsCommitteeStatistics;
+  final List<BillsStatisticsItem>? collabillsCommitteeStatistics;
+  final List<BillsStatisticsItem>? billsStatusStatistics;
+  final List<BillsStatisticsItem>? collabillsStatusStatistics;
+  final List<String>? billsNthStatistics;
+  final List<String>? collabillsNthStatistics;
 
   Candidate({
     required this.id,
@@ -48,63 +59,25 @@ class Candidate {
     required this.billsNthStatistics,
     required this.collabillsNthStatistics,
   });
-  factory Candidate.fromJson(Map<String, dynamic> json) => Candidate(
-        id: json["_id"] ?? '',
-        enName: json["enName"] ?? '',
-        electoralDistrict: json["electoralDistrict"] ?? '',
-        affiliatedCommittee: json["affiliatedCommittee"] ?? '',
-        electionCount: json["electionCount"] ?? 0,
-        officePhone: json["officePhone"] ?? '',
-        officeRoom: json["officeRoom"] ?? '',
-        memberHomepage: json["memberHomepage"] ?? '',
-        individualHomepage: json["individualHomepage"] ?? '',
-        email: json["email"] ?? '',
-        aide: json["aide"] ?? '',
-        chiefOfStaff: json["chiefOfStaff"] ?? '',
-        secretary: json["secretary"] ?? '',
-        officeGuide: json["officeGuide"] ?? '',
-        history: json["history"] ?? '',
-        koName: json["koName"] ?? '',
-        partyName: json["partyName"] ?? '',
-        bills: List<Bill>.from(
-          (json["bills"] ?? []).map((x) => Bill.fromJson(x)),
-        ),
-        collabills: List<Bill>.from(
-          (json["collabills"] ?? []).map((x) => Bill.fromJson(x)),
-        ),
-        billsCommitteeStatistics: List<BillsStatisticsItem>.from(
-          (json['billsCommitteeStatistics'] ?? [])
-              .map((x) => BillsStatisticsItem.fromJson(x)),
-        ),
-        collabillsCommitteeStatistics: List<BillsStatisticsItem>.from(
-          (json['collabillsCommitteeStatistics'] ?? [])
-              .map((x) => BillsStatisticsItem.fromJson(x)),
-        ),
-        billsStatusStatistics: List<BillsStatisticsItem>.from(
-          (json['billsStatusStatistics'] ?? [])
-              .map((x) => BillsStatisticsItem.fromJson(x)),
-        ),
-        collabillsStatusStatistics: List<BillsStatisticsItem>.from(
-          (json['collabillsStatusStatistics'] ?? [])
-              .map((x) => BillsStatisticsItem.fromJson(x)),
-        ),
-        billsNthStatistics: List.from(json['billsNthStatistics'] ?? []),
-        collabillsNthStatistics:
-            List.from(json['collabillsNthStatistics'] ?? []),
-      );
+
+  factory Candidate.fromJson(Map<String, dynamic> json) =>
+      _$CandidateFromJson(json);
+  Map<String, dynamic> toJson() => _$CandidateToJson(this);
 }
 
+@JsonSerializable()
 class Bill {
-  String id;
-  String nth;
-  String name;
-  String proposers;
-  String committee = '';
-  DateTime date;
-  String status;
-  String summary;
-  String billDetailUrl;
-  String billNo;
+  @JsonKey(name: "_id")
+  String? id;
+  String? nth;
+  String? name;
+  String? proposers;
+  String? committee;
+  DateTime? date;
+  String? status;
+  String? summary;
+  String? billDetailUrl;
+  String? billNo;
 
   Bill({
     required this.id,
@@ -118,36 +91,22 @@ class Bill {
     required this.billNo,
     required this.billDetailUrl,
   });
-
-  factory Bill.fromJson(Map<String, dynamic> json) => Bill(
-        id: json["id"] ?? '',
-        nth: json["nth"] ?? '',
-        name: json["name"] ?? '',
-        proposers: json["proposers"] ?? '',
-        committee: json["committee"] ?? '',
-        date: DateTime.parse(json["date"] ?? ''),
-        status: json["status"] ?? '',
-        summary: json["summary"] ?? '',
-        billNo: json["billNo"] ?? '',
-        billDetailUrl: json["billDetailUrl"] ?? '',
-      );
+  factory Bill.fromJson(Map<String, dynamic> json) => _$BillFromJson(json);
+  Map<String, dynamic> toJson() => _$BillToJson(this);
 }
 
+@JsonSerializable()
 class BillsStatisticsItem {
-  String nth;
-  String name;
-  int value;
+  String? nth;
+  String? name;
+  int? value;
 
   BillsStatisticsItem({
     required this.nth,
     required this.name,
     required this.value,
   });
-
   factory BillsStatisticsItem.fromJson(Map<String, dynamic> json) =>
-      BillsStatisticsItem(
-        nth: json["nth"] ?? '',
-        name: json["name"] ?? '',
-        value: json["value"] ?? 0,
-      );
+      _$BillsStatisticsItemFromJson(json);
+  Map<String, dynamic> toJson() => _$BillsStatisticsItemToJson(this);
 }

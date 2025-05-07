@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/sizes.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
 
 List<String> tabs = ['대표발의', '공동발의'];
 
