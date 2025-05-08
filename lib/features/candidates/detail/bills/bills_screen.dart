@@ -19,12 +19,12 @@ class BillsScreen extends StatefulWidget {
   static String routeName = '/candidates/:id/bills';
   final String id;
   late BillTypeEnum? type;
-  final String? nth;
+  final String? age;
 
   BillsScreen({
     super.key,
     this.type = BillTypeEnum.bills,
-    required this.nth,
+    required this.age,
     required this.id,
   });
 
@@ -35,7 +35,7 @@ class BillsScreen extends StatefulWidget {
 class _BillsScreenState extends State<BillsScreen> {
   final _scrollController = ScrollController();
   BillStatusEnum filterValue = BillStatusEnum.all;
-  String nth = '';
+  String age = '';
 
   int filterStatus(String status) {
     final query = getCandidateByIdQuery(id: widget.id);
@@ -44,8 +44,8 @@ class _BillsScreenState extends State<BillsScreen> {
         : query.state.data?.collabillsStatusStatistics;
     final value = target
         ?.firstWhere(
-          (element) => element.name == status && element.nth == nth,
-          orElse: () => BillsStatisticsItem(name: status, value: 0, nth: ''),
+          (element) => element.name == status && element.age == age,
+          orElse: () => BillsStatisticsItem(name: status, value: 0, age: ''),
         )
         .value;
     return value!.isFinite ? value : 1;
@@ -57,7 +57,7 @@ class _BillsScreenState extends State<BillsScreen> {
       final query = getCandidatesBillsInfiniteQuery(
         id: widget.id,
         status: filterValue,
-        nth: nth,
+        age: age,
         type: widget.type,
       );
     });
@@ -71,7 +71,7 @@ class _BillsScreenState extends State<BillsScreen> {
     final query = getCandidatesBillsInfiniteQuery(
       id: widget.id,
       status: filterValue,
-      nth: nth,
+      age: age,
       type: widget.type,
     );
     if (_isBottom && query.state.status != QueryStatus.loading) {
@@ -89,7 +89,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
   void _onNthTap(String str) {
     setState(() {
-      nth = str;
+      age = str;
     });
   }
 
@@ -97,7 +97,7 @@ class _BillsScreenState extends State<BillsScreen> {
   void initState() {
     _scrollController.addListener(_onScroll);
     setState(() {
-      nth = widget.nth ?? '22대';
+      age = widget.age ?? '22';
     });
     super.initState();
   }
@@ -133,7 +133,7 @@ class _BillsScreenState extends State<BillsScreen> {
                         (e) => GestureDetector(
                           onTap: () => _onNthTap(e),
                           child: NthTab(
-                            nth: nth,
+                            age: age,
                             text: e,
                           ),
                         ),
@@ -191,7 +191,7 @@ class _BillsScreenState extends State<BillsScreen> {
                       query: getCandidatesBillsInfiniteQuery(
                         id: widget.id,
                         status: filterValue,
-                        nth: nth,
+                        age: age,
                         type: widget.type,
                       ),
                       builder: (context, state, query) {
@@ -223,7 +223,7 @@ class _BillsScreenState extends State<BillsScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            item.nth!,
+                                            "${item.age}대",
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,

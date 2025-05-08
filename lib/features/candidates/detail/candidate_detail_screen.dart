@@ -35,7 +35,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   late Future<Candidate> featureCandidate;
   late int billsCount;
   late int collabillsCount;
-  String nth = '';
+  String age = '';
 
   Future<void> _onLinkTap(String link) async {
     final Uri url = Uri.parse(getNormalizedUrl(link));
@@ -55,28 +55,23 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
         : (query.state.data?.collabillsStatusStatistics ?? []);
     return target
             .firstWhere(
-              (element) => element.name == status && element.nth == nth,
+              (element) => element.name == status && element.age == age,
               orElse: () =>
-                  BillsStatisticsItem(name: status, value: 0, nth: ''),
+                  BillsStatisticsItem(name: status, value: 0, age: ''),
             )
             .value ??
-        10;
-  }
-
-  List<String> getNthList() {
-    final query = getCandidateByIdQuery(id: widget.id);
-    return query.state.data?.billsNthStatistics ?? [];
+        0;
   }
 
   void _onBillsTap(BillTypeEnum type) {
     context.push(
-      '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}&nth=$nth',
+      '/candidates/${widget.id}/bills?type=${type == BillTypeEnum.bills ? 'bill' : 'collabills'}&age=$age',
     );
   }
 
   void _onNthTap(String str) {
     setState(() {
-      nth = str;
+      age = str;
     });
   }
 
@@ -84,7 +79,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   void initState() {
     super.initState();
     final query = getCandidateByIdQuery(id: widget.id);
-    nth = query.state.data?.billsNthStatistics?.first ?? '';
+    age = query.state.data?.billsNthStatistics?.first ?? '';
   }
 
   Widget _billsPage({required BillTypeEnum type}) {
@@ -92,12 +87,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
     final query = getCandidateByIdQuery(id: widget.id);
     final candidate = query.state.data;
 
-    if (nth == '') nth = query.state.data?.billsNthStatistics?.first ?? '';
+    if (age == '') {
+      age = query.state.data?.billsStatusStatistics?.first.age ?? '22';
+    }
 
     // NOTE 빌드 타임에 실행되므로 setState 없이 실행
     Iterable<BillsStatisticsItem> billsCommitteeStatistics =
         (candidate?.billsCommitteeStatistics ?? []).where(
-      (element) => element.nth == nth,
+      (element) => element.age == age,
     );
     billsCount = billsCommitteeStatistics.fold(
       0,
@@ -106,7 +103,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
 
     Iterable<BillsStatisticsItem> collabillsCommitteeStatistics =
         (candidate?.collabillsCommitteeStatistics ?? []).where(
-      (element) => element.nth == nth,
+      (element) => element.age == age,
     );
     collabillsCount = collabillsCommitteeStatistics.fold(
       0,
@@ -120,15 +117,19 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
           children: [
             Row(
               children: [
-                ...(query.state.data?.billsNthStatistics ?? []).map(
-                  (e) => GestureDetector(
-                    onTap: () => _onNthTap(e),
-                    child: NthTab(
-                      nth: nth,
-                      text: e,
+                ...(query.state.data?.billsCommitteeStatistics ?? [])
+                    .map((e) => e.age)
+                    .toSet()
+                    .toList()
+                    .map(
+                      (a) => GestureDetector(
+                        onTap: () => _onNthTap(a!),
+                        child: NthTab(
+                          age: age,
+                          text: "$a대",
+                        ),
+                      ),
                     ),
-                  ),
-                ),
               ],
             ),
             GestureDetector(
@@ -218,7 +219,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
                     ),
                     const Divider(),
                     ...(candidate != null
-                        ? (typeText == '대표'
+                        ? (type == BillTypeEnum.bills
                                 ? billsCommitteeStatistics
                                 : collabillsCommitteeStatistics)
                             .where(

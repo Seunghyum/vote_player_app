@@ -4,11 +4,11 @@ import 'package:vote_player_app/constants/sizes.dart';
 class NthTab extends StatelessWidget {
   const NthTab({
     super.key,
-    required this.nth,
+    required this.age,
     required this.text,
   });
 
-  final String nth;
+  final String age;
   final String text;
 
   @override
@@ -23,7 +23,7 @@ class NthTab extends StatelessWidget {
         bottom: Sizes.size8,
       ),
       decoration: BoxDecoration(
-        color: nth == text ? Colors.blueAccent : Colors.white,
+        color: '$age대' == text ? Colors.blueAccent : Colors.white,
         borderRadius: const BorderRadius.all(
           Radius.circular(Sizes.size8),
         ),
@@ -32,7 +32,7 @@ class NthTab extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: nth == text ? Colors.white : Colors.grey,
+          color: '$age대' == text ? Colors.white : Colors.grey,
         ),
       ),
     );

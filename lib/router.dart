@@ -26,7 +26,7 @@ final router = GoRouter(
                   path: 'bills',
                   builder: (context, state) => BillsScreen(
                     id: state.pathParameters['id']!,
-                    nth: state.uri.queryParameters['nth'] ?? '22대',
+                    age: state.uri.queryParameters['age'] ?? '22',
                     type: state.uri.queryParameters['type'] == 'collabills'
                         ? BillTypeEnum.collabils
                         : BillTypeEnum.bills,

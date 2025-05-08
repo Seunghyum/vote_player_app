@@ -84,34 +84,35 @@ Map<String, dynamic> _$CandidateToJson(Candidate instance) => <String, dynamic>{
 
 Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
       id: json['_id'] as String?,
-      nth: json['nth'] as String?,
-      name: json['name'] as String?,
-      proposers: json['proposers'] as String?,
-      committee: json['committee'] as String?,
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
-      status: json['status'] as String?,
-      summary: json['summary'] as String?,
-      billNo: json['billNo'] as String?,
-      billDetailUrl: json['billDetailUrl'] as String?,
+      age: json['AGE'] as String?,
+      name: json['BILL_NAME'] as String?,
+      proposers: json['PROPOSER'] as String?,
+      committee: json['COMMITTEE'] as String?,
+      date: json['PROPOSE_DT'] == null
+          ? null
+          : DateTime.parse(json['PROPOSE_DT'] as String),
+      status: json['PROC_RESULT'] as String?,
+      summary: json['COMMITTEE_ID'] as String?,
+      billNo: json['BILL_NO'] as String?,
+      billDetailUrl: json['DETAIL_LINK'] as String?,
     );
 
 Map<String, dynamic> _$BillToJson(Bill instance) => <String, dynamic>{
       '_id': instance.id,
-      'nth': instance.nth,
-      'name': instance.name,
-      'proposers': instance.proposers,
-      'committee': instance.committee,
-      'date': instance.date?.toIso8601String(),
-      'status': instance.status,
-      'summary': instance.summary,
-      'billDetailUrl': instance.billDetailUrl,
-      'billNo': instance.billNo,
+      'AGE': instance.age,
+      'BILL_NAME': instance.name,
+      'PROPOSER': instance.proposers,
+      'COMMITTEE': instance.committee,
+      'PROPOSE_DT': instance.date?.toIso8601String(),
+      'PROC_RESULT': instance.status,
+      'COMMITTEE_ID': instance.summary,
+      'DETAIL_LINK': instance.billDetailUrl,
+      'BILL_NO': instance.billNo,
     };
 
 BillsStatisticsItem _$BillsStatisticsItemFromJson(Map<String, dynamic> json) =>
     BillsStatisticsItem(
-      nth: json['nth'] as String?,
+      age: json['age'] as String?,
       name: json['name'] as String?,
       value: (json['value'] as num?)?.toInt(),
     );
@@ -119,7 +120,7 @@ BillsStatisticsItem _$BillsStatisticsItemFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$BillsStatisticsItemToJson(
         BillsStatisticsItem instance) =>
     <String, dynamic>{
-      'nth': instance.nth,
+      'age': instance.age,
       'name': instance.name,
       'value': instance.value,
     };

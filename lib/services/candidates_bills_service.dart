@@ -13,22 +13,21 @@ class CandidatesBillsService {
   Future<CandidatesBillsResponse> getCandidatesBillsById({
     required String id,
     required BillStatusEnum status,
-    required String? nth,
+    required String? age,
     BillTypeEnum? type = BillTypeEnum.bills,
     int page = 0,
     int pageCount = 15,
   }) async {
     try {
       String? path =
-          '${dotenv.env['API_PATH']}/candidates/$id/bills?status=${status.koreanName}&type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}&page=$page&pageCount=$pageCount&nth=$nth';
+          '${dotenv.env['API_PATH']}/candidates/$id/bills?status=${status.koreanName}&type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}&page=$page&pageCount=$pageCount&age=$age';
       print("@@@@@ $path");
       final url = Uri.parse(
         path,
       );
       CandidatesBillsResponse cbr = CandidatesBillsResponse(
         result: [],
-        summary:
-            CandidatesBillsSummary(total: 0, isLastPage: true, allTotal: 0),
+        summary: CandidatesBillsSummary(total: 0, isLastPage: true),
       );
 
       final response = await http.get(url);
@@ -39,7 +38,6 @@ class CandidatesBillsService {
       cbr.summary = CandidatesBillsSummary(
         total: data['summary']['total'],
         isLastPage: data['summary']['isLastPage'],
-        allTotal: data['summary']['allTotal'],
       );
       for (var bill in data['result']) {
         cbr.result.add(Bill.fromJson(bill));
@@ -80,13 +78,13 @@ class CandidatesBillsService {
 InfiniteQuery<CandidatesBillsResponse, int> getCandidatesBillsInfiniteQuery({
   required String id,
   required BillStatusEnum status,
-  required String? nth,
+  required String? age,
   BillTypeEnum? type = BillTypeEnum.bills,
   int? page,
   int pageCount = 15,
 }) {
   return InfiniteQuery<CandidatesBillsResponse, int>(
-    key: 'candidates-bills-$id-$status-$nth',
+    key: 'candidates-bills-$id-$status-$age',
     getNextArg: (state) {
       if (state.lastPage?.summary.isLastPage ?? false) return null;
       return state.length + 1;
@@ -95,7 +93,7 @@ InfiniteQuery<CandidatesBillsResponse, int> getCandidatesBillsInfiniteQuery({
       return CandidatesBillsService().getCandidatesBillsById(
         id: id,
         status: status,
-        nth: nth,
+        age: age,
         type: type,
         pageCount: pageCount,
         page: page ?? arg,
@@ -130,12 +128,10 @@ class CandidatesBillsResponse {
 class CandidatesBillsSummary {
   int total;
   bool isLastPage;
-  int allTotal;
 
   CandidatesBillsSummary({
     required this.total,
     required this.isLastPage,
-    required this.allTotal,
   });
 }
 
