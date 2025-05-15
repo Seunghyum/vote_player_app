@@ -72,6 +72,8 @@ class Bill {
   String? id;
   @JsonKey(name: "AGE")
   String? age;
+  @JsonKey(name: "BILL_ID")
+  String? billId;
   @JsonKey(name: "BILL_NAME")
   String? name;
   @JsonKey(name: "PROPOSER")
@@ -82,7 +84,6 @@ class Bill {
   DateTime? date;
   @JsonKey(name: "PROC_RESULT")
   String? status;
-  @JsonKey(name: "COMMITTEE_ID") // TODO: summary 값
   String? summary;
   @JsonKey(name: "DETAIL_LINK")
   String? billDetailUrl;
@@ -92,6 +93,7 @@ class Bill {
   Bill({
     required this.id,
     required this.age,
+    required this.billId,
     required this.name,
     required this.proposers,
     required this.committee,

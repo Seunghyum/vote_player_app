@@ -85,6 +85,7 @@ Map<String, dynamic> _$CandidateToJson(Candidate instance) => <String, dynamic>{
 Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
       id: json['_id'] as String?,
       age: json['AGE'] as String?,
+      billId: json['BILL_ID'] as String?,
       name: json['BILL_NAME'] as String?,
       proposers: json['PROPOSER'] as String?,
       committee: json['COMMITTEE'] as String?,
@@ -92,7 +93,7 @@ Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
           ? null
           : DateTime.parse(json['PROPOSE_DT'] as String),
       status: json['PROC_RESULT'] as String?,
-      summary: json['COMMITTEE_ID'] as String?,
+      summary: json['summary'] as String?,
       billNo: json['BILL_NO'] as String?,
       billDetailUrl: json['DETAIL_LINK'] as String?,
     );
@@ -100,12 +101,13 @@ Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
 Map<String, dynamic> _$BillToJson(Bill instance) => <String, dynamic>{
       '_id': instance.id,
       'AGE': instance.age,
+      'BILL_ID': instance.billId,
       'BILL_NAME': instance.name,
       'PROPOSER': instance.proposers,
       'COMMITTEE': instance.committee,
       'PROPOSE_DT': instance.date?.toIso8601String(),
       'PROC_RESULT': instance.status,
-      'COMMITTEE_ID': instance.summary,
+      'summary': instance.summary,
       'DETAIL_LINK': instance.billDetailUrl,
       'BILL_NO': instance.billNo,
     };

@@ -21,7 +21,6 @@ class CandidatesBillsService {
     try {
       String? path =
           '${dotenv.env['API_PATH']}/candidates/$id/bills?status=${status.koreanName}&type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}&page=$page&pageCount=$pageCount&age=$age';
-      print("@@@@@ $path");
       final url = Uri.parse(
         path,
       );
@@ -57,7 +56,7 @@ class CandidatesBillsService {
   ) async {
     try {
       String? path =
-          '${dotenv.env['API_PATH']}/candidates/$candidateId/bills/$billId?type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}';
+          '${dotenv.env['API_PATH']}/bills/$billId?type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}';
       final url = Uri.parse(
         path,
       );
