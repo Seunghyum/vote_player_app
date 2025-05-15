@@ -20,18 +20,14 @@ class VoteBloc extends Bloc<VoteEvent, VoteState> {
           ),
         ) {
     on<FilterVoteEvent>((event, emit) {
-      print('!!!! event.voteType ${event.voteType}');
       final type = event.voteType;
-      print('!!!! type.koreanName $type');
       final filtered = type == VoteTypeEnum.all
           ? allMembers
-          : allMembers.where(
-              (m) {
-                print('!!!! m.RESULT_VOTE_MOD ${m.RESULT_VOTE_MOD}');
-                // print('!!!! type.koreanName ${type.koreanName}');
-                return m.RESULT_VOTE_MOD == type.koreanName;
-              },
-            ).toList();
+          : allMembers
+              .where(
+                (m) => m.RESULT_VOTE_MOD == type.koreanName,
+              )
+              .toList();
       emit(state.copyWith(selectedType: type, filteredMembers: filtered));
     });
 

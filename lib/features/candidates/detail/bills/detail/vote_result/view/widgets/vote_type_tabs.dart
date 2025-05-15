@@ -20,7 +20,6 @@ class VoteTypeTabs extends StatelessWidget {
           label: Text(type.koreanName),
           selected: selectedType == type,
           onSelected: (_) {
-            print("@@#### type : $type");
             context.read<VoteBloc>().add(FilterVoteEvent(type));
           },
         );

@@ -2,7 +2,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:vote_player_app/constants/sizes.dart';
-import 'package:vote_player_app/features/candidates/detail/widgets/bill_chart_indicator.dart';
+import 'package:vote_player_app/features/candidates/detail/widgets/chart_indicator.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
 class BillStatusDonutChart extends StatefulWidget {
@@ -68,49 +68,49 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              BillChartIndicator(
+              ChartIndicator(
                 color:
                     getColorByBillStatus(BillStatusEnum.passed).backgroundColor,
                 text: BillStatusEnum.passed.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.amendmentPassed)
                     .backgroundColor,
                 text: BillStatusEnum.amendmentPassed.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.alternativePassed)
                     .backgroundColor,
                 text: BillStatusEnum.alternativePassed.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.pending)
                     .backgroundColor,
                 text: BillStatusEnum.pending.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.termExpiration)
                     .backgroundColor,
                 text: BillStatusEnum.termExpiration.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.dispose)
                     .backgroundColor,
                 text: BillStatusEnum.dispose.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.withdrawal)
                     .backgroundColor,
                 text: BillStatusEnum.withdrawal.koreanName,
                 isSquare: true,
               ),
-              BillChartIndicator(
+              ChartIndicator(
                 color: getColorByBillStatus(BillStatusEnum.rejected)
                     .backgroundColor,
                 text: BillStatusEnum.rejected.koreanName,

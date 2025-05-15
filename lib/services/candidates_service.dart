@@ -51,7 +51,6 @@ class CandidatesService {
   ) async {
     try {
       String? path = '${dotenv.env['API_PATH']}/candidates/$id';
-
       final url = Uri.parse(
         path,
       );

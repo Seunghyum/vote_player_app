@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BillChartIndicator extends StatelessWidget {
-  const BillChartIndicator({
+class ChartIndicator extends StatelessWidget {
+  const ChartIndicator({
     super.key,
     required this.color,
     required this.text,
