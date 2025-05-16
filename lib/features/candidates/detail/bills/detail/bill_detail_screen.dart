@@ -114,7 +114,6 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                       },
                     ],
                   ),
-                  // Gaps.h16,
                   Html(data: state.data?.summary ?? ''),
                   Gaps.h16,
                   QueryBuilder(
@@ -124,13 +123,23 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                       billId: state.data?.billId ?? '',
                     ),
                     builder: (context, state) {
-                      return BlocProvider(
-                        create: (_) => VoteBloc(
-                          allMembers: state.data?.items ?? [],
-                          statics: state.data?.statics ?? [],
-                        ),
-                        child: const BillVoteResultPage(),
-                      );
+                      if (state.status == QueryStatus.error) {
+                        return const Text('에러발생가 발생했습니다. 잠시 후 다시 시도해주세요');
+                      } else if (state.status == QueryStatus.loading ||
+                          state.status == QueryStatus.initial) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state.status == QueryStatus.success) {
+                        return BlocProvider(
+                          create: (_) => VoteBloc(
+                            allMembers: state.data?.items ?? [],
+                            statics: state.data?.statics ?? [],
+                          ),
+                          child: state.data!.items.isNotEmpty
+                              ? const BillVoteResultPage()
+                              : Container(),
+                        );
+                      }
+                      return const CircularProgressIndicator();
                     },
                   ),
                 ],

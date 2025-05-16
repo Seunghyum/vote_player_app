@@ -25,20 +25,26 @@ class BillVoteResultsService {
       BillVoteResultsResponse bvr = BillVoteResultsResponse(
         code: 404,
         items: [],
+        message: null,
         statics: [],
         list_total_count: 0,
       );
 
-      for (var voteResult in data['items']) {
-        bvr.items.add(BillVoteResult.fromJson(voteResult));
+      if (data == null) {
+        return bvr;
       }
-
       bvr.code = data['code'];
       bvr.list_total_count = data['list_total_count'];
+      if (data['items'] != null) {
+        for (var voteResult in data['items']) {
+          bvr.items.add(BillVoteResult.fromJson(voteResult));
+        }
+      }
       List<BillVoteResultsStatics> bvrStatics = [];
       for (var static in data['statics']) {
         bvrStatics.add(BillVoteResultsStatics.fromJson(static));
       }
+
       bvr.message = data['message'];
       bvr.statics = bvrStatics;
       return bvr;

@@ -5,9 +5,6 @@ import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_res
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/view/widgets/vote_type_tabs.dart';
 
 class BillVoteResultPage extends StatelessWidget {
-  // final billTitle = '청년기본법 일부개정법률안';
-  // final sessionInfo = '2024.04.01 · 국회운영위원회 · 제400회';
-
   const BillVoteResultPage({super.key});
 
   @override
@@ -15,11 +12,6 @@ class BillVoteResultPage extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   billTitle,
-        //   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        // ),
-        // Text(sessionInfo, style: const TextStyle(color: Colors.grey)),
         SizedBox(height: 20),
         Center(child: VotePieChart()),
         SizedBox(height: 10),
