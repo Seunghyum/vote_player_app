@@ -1,13 +1,12 @@
 import 'dart:convert';
-import 'package:cached_query_flutter/cached_query_flutter.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
+import 'package:vote_player_app/services/candidates_service.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
-
-var logger = Logger();
 
 class CandidatesBillsService {
   Future<CandidatesBillsResponse> getCandidatesBillsById({
@@ -72,76 +71,4 @@ class CandidatesBillsService {
       throw 'err';
     }
   }
-}
-
-InfiniteQuery<CandidatesBillsResponse, int> getCandidatesBillsInfiniteQuery({
-  required String id,
-  required BillStatusEnum status,
-  required String? age,
-  BillTypeEnum? type = BillTypeEnum.bills,
-  int? page,
-  int pageCount = 15,
-}) {
-  return InfiniteQuery<CandidatesBillsResponse, int>(
-    key: 'candidates-bills-$id-$status-$age',
-    getNextArg: (state) {
-      if (state.lastPage?.summary.isLastPage ?? false) return null;
-      return state.length + 1;
-    },
-    queryFn: (arg) {
-      return CandidatesBillsService().getCandidatesBillsById(
-        id: id,
-        status: status,
-        age: age,
-        type: type,
-        pageCount: pageCount,
-        page: page ?? arg,
-      );
-    },
-  );
-}
-
-class GetCandidatesInfiniteQueryArgs {
-  String id;
-  BillStatusEnum status;
-  BillTypeEnum type;
-  int page = 0;
-  int pageCount = 15;
-
-  GetCandidatesInfiniteQueryArgs({
-    required this.id,
-    required this.status,
-    this.type = BillTypeEnum.bills,
-    required this.page,
-    required this.pageCount,
-  });
-}
-
-class CandidatesBillsResponse {
-  List<Bill> result;
-  CandidatesBillsSummary summary;
-
-  CandidatesBillsResponse({required this.result, required this.summary});
-}
-
-class CandidatesBillsSummary {
-  int total;
-  bool isLastPage;
-
-  CandidatesBillsSummary({
-    required this.total,
-    required this.isLastPage,
-  });
-}
-
-Query<Bill> getBillByIdWithCandidateIdQuery({
-  required BillTypeEnum type,
-  required String candidateId,
-  required String billNo,
-}) {
-  return Query<Bill>(
-    key: 'candidate-$candidateId-bill-$billNo',
-    queryFn: () => CandidatesBillsService()
-        .getBillByIdWithCandidateId(type, candidateId, billNo),
-  );
 }

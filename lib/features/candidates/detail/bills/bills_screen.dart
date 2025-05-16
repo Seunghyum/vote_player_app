@@ -2,13 +2,14 @@ import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vote_player_app/constants/sizes.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/repo/candidates_bills_repo.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_filter.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/nth_tab.dart';
 import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/services/candidates_bills_service.dart';
 import 'package:vote_player_app/services/candidates_service.dart';
 import 'package:vote_player_app/utils/datetime.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
@@ -54,7 +55,7 @@ class _BillsScreenState extends State<BillsScreen> {
   void _onFilterTap(BillStatusEnum value) {
     setState(() {
       filterValue = value;
-      final query = getCandidatesBillsInfiniteQuery(
+      CandidatesBillsRepo().getCandidatesBillsInfiniteQuery(
         id: widget.id,
         status: filterValue,
         age: age,
@@ -68,7 +69,7 @@ class _BillsScreenState extends State<BillsScreen> {
   }
 
   void _onScroll() {
-    final query = getCandidatesBillsInfiniteQuery(
+    final query = CandidatesBillsRepo().getCandidatesBillsInfiniteQuery(
       id: widget.id,
       status: filterValue,
       age: age,
@@ -188,7 +189,8 @@ class _BillsScreenState extends State<BillsScreen> {
                       ),
                     ),
                     InfiniteQueryBuilder<CandidatesBillsResponse, int>(
-                      query: getCandidatesBillsInfiniteQuery(
+                      query:
+                          CandidatesBillsRepo().getCandidatesBillsInfiniteQuery(
                         id: widget.id,
                         status: filterValue,
                         age: age,

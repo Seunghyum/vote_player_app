@@ -7,13 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/repo/candidates_bills_repo.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/bloc/vote_bloc.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/repo/bill_vote_result_repo.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/view/bill_vote_result_page.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
-import 'package:vote_player_app/services/candidates_bills_service.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 import 'package:vote_player_app/utils/url.dart';
 
@@ -45,7 +45,7 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return QueryBuilder(
-      query: getBillByIdWithCandidateIdQuery(
+      query: CandidatesBillsRepo().getBillByIdWithCandidateIdQuery(
         type: widget.type,
         candidateId: widget.candidateId,
         billNo: widget.billNo,

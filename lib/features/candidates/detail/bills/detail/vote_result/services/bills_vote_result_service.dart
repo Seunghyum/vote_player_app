@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/models/bill_vote_result_model.dart';
-import 'package:vote_player_app/services/candidates_bills_service.dart';
+import 'package:vote_player_app/services/candidates_service.dart';
 
 class BillVoteResultsService {
   Future<BillVoteResultsResponse> getBillVoteResultsByBillId(
