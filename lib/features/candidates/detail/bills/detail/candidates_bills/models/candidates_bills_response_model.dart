@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
 
 part 'candidates_bills_response_model.g.dart';
 

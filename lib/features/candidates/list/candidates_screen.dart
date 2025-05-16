@@ -7,7 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:vote_player_app/constants/sizes.dart';
 
 import 'package:vote_player_app/features/candidates/list/widgets/search_input.dart';
-import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/repo/candidates_repo.dart';
 import 'package:vote_player_app/utils/keyboard.dart';
 import 'package:vote_player_app/utils/url.dart';
 
@@ -22,6 +23,7 @@ class CandidatesScreen extends StatefulWidget {
 class _CandidatesScreenState extends State<CandidatesScreen> {
   String _searchQuery = '';
   late int totalCount;
+  final _candidatesRepo = CandidatesRepo();
   CandidatesSummary? summary;
 
   final _scrollController = ScrollController();
@@ -44,7 +46,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   }
 
   void _onScroll() {
-    final query = getCandidatesInfiniteQuery(koName: _searchQuery);
+    final query =
+        _candidatesRepo.getCandidatesInfiniteQuery(koName: _searchQuery);
     if (_isBottom && query.state.status != QueryStatus.loading) {
       query.getNextPage();
     }
@@ -78,14 +81,16 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
       onTap: () => hideKeyboard(context),
       child: Scaffold(
         body: InfiniteQueryBuilder<CandidatesResponse, int>(
-          query: getCandidatesInfiniteQuery(koName: _searchQuery),
+          query:
+              _candidatesRepo.getCandidatesInfiniteQuery(koName: _searchQuery),
           builder: (context, state, query) {
             final allPosts = state.data;
             return RefreshIndicator(
               edgeOffset: 110,
               onRefresh: () => Future.sync(
-                () =>
-                    getCandidatesInfiniteQuery(koName: _searchQuery).refetch(),
+                () => _candidatesRepo
+                    .getCandidatesInfiniteQuery(koName: _searchQuery)
+                    .refetch(),
               ),
               child: CustomScrollView(
                 controller: _scrollController,

@@ -122,3 +122,28 @@ class BillsStatisticsItem {
       _$BillsStatisticsItemFromJson(json);
   Map<String, dynamic> toJson() => _$BillsStatisticsItemToJson(this);
 }
+
+@JsonSerializable()
+class CandidatesResponse {
+  List<Candidate> result;
+  CandidatesSummary summary;
+
+  CandidatesResponse({required this.result, required this.summary});
+  factory CandidatesResponse.fromJson(Map<String, dynamic> json) =>
+      _$CandidatesResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$CandidatesResponseToJson(this);
+}
+
+@JsonSerializable()
+class CandidatesSummary {
+  int total;
+  bool isLastPage;
+
+  CandidatesSummary({
+    required this.total,
+    required this.isLastPage,
+  });
+  factory CandidatesSummary.fromJson(Map<String, dynamic> json) =>
+      _$CandidatesSummaryFromJson(json);
+  Map<String, dynamic> toJson() => _$CandidatesSummaryToJson(this);
+}

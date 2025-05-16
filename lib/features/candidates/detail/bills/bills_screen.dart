@@ -9,8 +9,8 @@ import 'package:vote_player_app/features/candidates/detail/bills/widgets/list_fi
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_label.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/nth_tab.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/repo/candidates_repo.dart';
 import 'package:vote_player_app/utils/datetime.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
@@ -35,11 +35,12 @@ class BillsScreen extends StatefulWidget {
 
 class _BillsScreenState extends State<BillsScreen> {
   final _scrollController = ScrollController();
+  final _candidatesRepo = CandidatesRepo();
   BillStatusEnum filterValue = BillStatusEnum.all;
   String age = '';
 
   int filterStatus(String status) {
-    final query = getCandidateByIdQuery(id: widget.id);
+    final query = _candidatesRepo.getCandidateByIdQuery(id: widget.id);
     final target = widget.type == BillTypeEnum.bills
         ? query.state.data?.billsStatusStatistics
         : query.state.data?.collabillsStatusStatistics;
@@ -114,7 +115,7 @@ class _BillsScreenState extends State<BillsScreen> {
   @override
   Widget build(BuildContext context) {
     return QueryBuilder(
-      query: getCandidateByIdQuery(id: widget.id),
+      query: _candidatesRepo.getCandidateByIdQuery(id: widget.id),
       builder: (BuildContext context, QueryState<Candidate> state) {
         return Scaffold(
           appBar: BillAppBar(

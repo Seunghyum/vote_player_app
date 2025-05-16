@@ -11,8 +11,8 @@ import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_d
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/nth_tab.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/persistent_tabbar.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/repo/candidates_repo.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 import 'package:vote_player_app/utils/url.dart';
 
@@ -35,6 +35,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   late Future<Candidate> featureCandidate;
   late int billsCount;
   late int collabillsCount;
+  final _candidatesRepo = CandidatesRepo();
   String age = '';
 
   Future<void> _onLinkTap(String link) async {
@@ -49,7 +50,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   }
 
   int filterStatus(String status, BillTypeEnum type) {
-    final query = getCandidateByIdQuery(id: widget.id);
+    final query = _candidatesRepo.getCandidateByIdQuery(id: widget.id);
     final target = type == BillTypeEnum.bills
         ? (query.state.data?.billsStatusStatistics ?? [])
         : (query.state.data?.collabillsStatusStatistics ?? []);
@@ -78,13 +79,13 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   @override
   void initState() {
     super.initState();
-    final query = getCandidateByIdQuery(id: widget.id);
+    final query = _candidatesRepo.getCandidateByIdQuery(id: widget.id);
     age = query.state.data?.billsNthStatistics?.first ?? '';
   }
 
   Widget _billsPage({required BillTypeEnum type}) {
     final typeText = type == BillTypeEnum.bills ? '대표' : '공동';
-    final query = getCandidateByIdQuery(id: widget.id);
+    final query = _candidatesRepo.getCandidateByIdQuery(id: widget.id);
     final candidate = query.state.data;
 
     if (age == '') {
@@ -279,7 +280,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen>
   @override
   Widget build(BuildContext context) {
     return QueryBuilder<Candidate>(
-      query: getCandidateByIdQuery(id: widget.id),
+      query: CandidatesRepo().getCandidateByIdQuery(id: widget.id),
       builder: (context, state) {
         final isLoading = state.data == null;
         final result = state.data ??

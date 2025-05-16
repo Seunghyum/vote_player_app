@@ -4,8 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
-import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/services/candidates_service.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
 class CandidatesBillsService {

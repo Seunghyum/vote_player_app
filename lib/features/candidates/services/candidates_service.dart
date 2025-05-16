@@ -3,7 +3,7 @@ import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
 
 var logger = Logger();
 
@@ -66,46 +66,4 @@ class CandidatesService {
       throw 'err';
     }
   }
-}
-
-InfiniteQuery<CandidatesResponse, int> getCandidatesInfiniteQuery({
-  String? koName,
-  int? page,
-}) {
-  return InfiniteQuery<CandidatesResponse, int>(
-    key: 'candidates-$koName',
-    getNextArg: (state) {
-      if (state.lastPage?.summary.isLastPage ?? false) return null;
-      return state.length + 1;
-    },
-    initialData: [],
-    queryFn: (arg) =>
-        CandidatesService().getCandidates(page: page ?? arg, koName: koName),
-  );
-}
-
-Query<Candidate> getCandidateByIdQuery({
-  required String id,
-}) {
-  return Query<Candidate>(
-    key: 'candidate-$id',
-    queryFn: () => CandidatesService().getCandidateById(id),
-  );
-}
-
-class CandidatesResponse {
-  List<Candidate> result;
-  CandidatesSummary summary;
-
-  CandidatesResponse({required this.result, required this.summary});
-}
-
-class CandidatesSummary {
-  int total;
-  bool isLastPage;
-
-  CandidatesSummary({
-    required this.total,
-    required this.isLastPage,
-  });
 }

@@ -126,3 +126,30 @@ Map<String, dynamic> _$BillsStatisticsItemToJson(
       'name': instance.name,
       'value': instance.value,
     };
+
+CandidatesResponse _$CandidatesResponseFromJson(Map<String, dynamic> json) =>
+    CandidatesResponse(
+      result: (json['result'] as List<dynamic>)
+          .map((e) => Candidate.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      summary:
+          CandidatesSummary.fromJson(json['summary'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CandidatesResponseToJson(CandidatesResponse instance) =>
+    <String, dynamic>{
+      'result': instance.result,
+      'summary': instance.summary,
+    };
+
+CandidatesSummary _$CandidatesSummaryFromJson(Map<String, dynamic> json) =>
+    CandidatesSummary(
+      total: (json['total'] as num).toInt(),
+      isLastPage: json['isLastPage'] as bool,
+    );
+
+Map<String, dynamic> _$CandidatesSummaryToJson(CandidatesSummary instance) =>
+    <String, dynamic>{
+      'total': instance.total,
+      'isLastPage': instance.isLastPage,
+    };

@@ -2,7 +2,7 @@ import 'package:cached_query_flutter/cached_query_flutter.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/services/candidates_bills_service.dart';
-import 'package:vote_player_app/models/candidate_model.dart';
+import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
 import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
 class CandidatesBillsRepo {
