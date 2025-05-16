@@ -1,4 +1,5 @@
 import 'package:cached_query_flutter/cached_query_flutter.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -114,7 +115,13 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
                       },
                     ],
                   ),
-                  Html(data: state.data?.summary ?? ''),
+                  ExpandableText(
+                    state.data?.summary?.replaceAll('<br>', '') ?? '',
+                    expandText: '더보기',
+                    collapseText: '간략하게',
+                    maxLines: 5,
+                    linkColor: Colors.blue,
+                  ),
                   Gaps.h16,
                   QueryBuilder(
                     query: BillVoteResultRepository()
