@@ -25,8 +25,9 @@ class BillVoteResult {
   String? BILL_NAME_URL; //	의안링크
   // String? SESSION_CD; //	회기
   // String? CURRENTS_CD; //	차수
-  int? AGE; //	대
+  String? AGE; //	대
   // String? MONA_CD; //	국회의원코드
+  BillVoteResultsCandidate? candidate;
 
   BillVoteResult({
     required this.HG_NM,
@@ -52,6 +53,7 @@ class BillVoteResult {
     // required this.CURRENTS_CD,
     required this.AGE,
     // required this.MONA_CD,
+    required this.candidate,
   });
   factory BillVoteResult.fromJson(Map<String, dynamic> json) =>
       _$BillVoteResultFromJson(json);
@@ -89,4 +91,19 @@ class BillVoteResultsStatics {
   factory BillVoteResultsStatics.fromJson(Map<String, dynamic> json) =>
       _$BillVoteResultsStaticsFromJson(json);
   Map<String, dynamic> toJson() => _$BillVoteResultsStaticsToJson(this);
+}
+
+@JsonSerializable()
+class BillVoteResultsCandidate {
+  @JsonKey(name: "_id")
+  String? id;
+  String? enName;
+
+  BillVoteResultsCandidate({
+    required this.id,
+    required this.enName,
+  });
+  factory BillVoteResultsCandidate.fromJson(Map<String, dynamic> json) =>
+      _$BillVoteResultsCandidateFromJson(json);
+  Map<String, dynamic> toJson() => _$BillVoteResultsCandidateToJson(this);
 }

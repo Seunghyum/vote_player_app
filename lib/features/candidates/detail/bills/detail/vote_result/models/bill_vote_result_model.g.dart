@@ -24,7 +24,11 @@ BillVoteResult _$BillVoteResultFromJson(Map<String, dynamic> json) =>
       RESULT_VOTE_MOD: json['RESULT_VOTE_MOD'] as String,
       BILL_URL: json['BILL_URL'] as String?,
       BILL_NAME_URL: json['BILL_NAME_URL'] as String?,
-      AGE: (json['AGE'] as num?)?.toInt(),
+      AGE: json['AGE'] as String?,
+      candidate: json['candidate'] == null
+          ? null
+          : BillVoteResultsCandidate.fromJson(
+              json['candidate'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BillVoteResultToJson(BillVoteResult instance) =>
@@ -46,6 +50,7 @@ Map<String, dynamic> _$BillVoteResultToJson(BillVoteResult instance) =>
       'BILL_URL': instance.BILL_URL,
       'BILL_NAME_URL': instance.BILL_NAME_URL,
       'AGE': instance.AGE,
+      'candidate': instance.candidate,
     };
 
 BillVoteResultsResponse _$BillVoteResultsResponseFromJson(
@@ -85,4 +90,18 @@ Map<String, dynamic> _$BillVoteResultsStaticsToJson(
     <String, dynamic>{
       'type': instance.type,
       'value': instance.value,
+    };
+
+BillVoteResultsCandidate _$BillVoteResultsCandidateFromJson(
+        Map<String, dynamic> json) =>
+    BillVoteResultsCandidate(
+      id: json['_id'] as String?,
+      enName: json['enName'] as String?,
+    );
+
+Map<String, dynamic> _$BillVoteResultsCandidateToJson(
+        BillVoteResultsCandidate instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'enName': instance.enName,
     };

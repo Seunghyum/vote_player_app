@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:vote_player_app/features/candidates/detail/bills/detail/vote_result/models/bill_vote_result_model.dart';
-import 'package:vote_player_app/services/candidates_service.dart';
+import 'package:vote_player_app/features/candidates/services/candidates_service.dart';
 
 class BillVoteResultsService {
   Future<BillVoteResultsResponse> getBillVoteResultsByBillId(
@@ -33,8 +33,9 @@ class BillVoteResultsService {
       if (data == null) {
         return bvr;
       }
-      bvr.code = data['code'];
-      bvr.list_total_count = data['list_total_count'];
+      if (data['code'] != null) bvr.code = data['code'];
+      if (data['list_total_count'] != null)
+        bvr.list_total_count = data['list_total_count'];
       if (data['items'] != null) {
         for (var voteResult in data['items']) {
           bvr.items.add(BillVoteResult.fromJson(voteResult));
