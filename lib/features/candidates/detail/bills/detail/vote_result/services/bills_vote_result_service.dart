@@ -42,10 +42,9 @@ class BillVoteResultsService {
         }
       }
       List<BillVoteResultsStatics> bvrStatics = [];
-      for (var static in data['statics']) {
-        bvrStatics.add(BillVoteResultsStatics.fromJson(static));
+      for (var statistic in data['statistics']) {
+        bvrStatics.add(BillVoteResultsStatics.fromJson(statistic));
       }
-
       bvr.message = data['message'];
       bvr.statics = bvrStatics;
       return bvr;
