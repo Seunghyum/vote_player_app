@@ -8,7 +8,7 @@ class NavTab extends StatelessWidget {
   final bool isSelected;
   final IconData icon;
   final IconData selectedIcon;
-  final void Function() onTap;
+  final void Function()? onTap;
 
   const NavTab({
     super.key,
@@ -16,7 +16,7 @@ class NavTab extends StatelessWidget {
     required this.isSelected,
     required this.icon,
     required this.selectedIcon,
-    required this.onTap,
+    this.onTap,
   });
 
   @override

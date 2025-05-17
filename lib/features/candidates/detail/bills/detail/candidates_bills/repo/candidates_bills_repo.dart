@@ -1,4 +1,5 @@
 import 'package:cached_query_flutter/cached_query_flutter.dart';
+import 'package:vote_player_app/features/bills/bill_list_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/services/candidates_bills_service.dart';
@@ -35,15 +36,13 @@ class CandidatesBillsRepo {
     );
   }
 
-  Query<Bill> getBillByIdWithCandidateIdQuery({
-    required BillTypeEnum type,
-    required String candidateId,
+  Query<Bill> getBillByBillNoQuery({
     required String billNo,
+    String? BILL_NAME,
   }) {
     return Query<Bill>(
-      key: 'candidate-$candidateId-bill-$billNo',
-      queryFn: () =>
-          _service.getBillByIdWithCandidateId(type, candidateId, billNo),
+      key: 'bill-$billNo',
+      queryFn: () => _service.getBillByIdWithCandidateId(billNo, BILL_NAME),
     );
   }
 }

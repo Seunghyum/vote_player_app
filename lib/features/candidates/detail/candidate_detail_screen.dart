@@ -5,7 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vote_player_app/constants/gaps.dart';
 import 'package:vote_player_app/constants/sizes.dart';
-import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/bills/bill_list_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/widgets/bill_app_bar.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/bill_status_donut_chart.dart';
 import 'package:vote_player_app/features/candidates/detail/widgets/list_table.dart';

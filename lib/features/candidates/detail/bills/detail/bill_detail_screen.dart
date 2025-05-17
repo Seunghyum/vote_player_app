@@ -18,14 +18,10 @@ import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 import 'package:vote_player_app/utils/url.dart';
 
 class BillDetailScreen extends StatefulWidget {
-  static String routeName = '/candidates/:id/bills/:billNo';
-  final BillTypeEnum type;
-  final String candidateId;
+  static String routeName = '/bills/:billNo';
   final String billNo;
   const BillDetailScreen({
     super.key,
-    required this.type,
-    required this.candidateId,
     required this.billNo,
   });
 
@@ -45,9 +41,7 @@ class _BillDetailScreenState extends State<BillDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return QueryBuilder(
-      query: CandidatesBillsRepo().getBillByIdWithCandidateIdQuery(
-        type: widget.type,
-        candidateId: widget.candidateId,
+      query: CandidatesBillsRepo().getBillByBillNoQuery(
         billNo: widget.billNo,
       ),
       builder: (context, state) {

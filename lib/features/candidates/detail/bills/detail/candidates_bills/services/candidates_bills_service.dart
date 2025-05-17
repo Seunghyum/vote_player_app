@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:vote_player_app/features/candidates/detail/bills/bills_screen.dart';
+import 'package:vote_player_app/features/bills/bill_list_screen.dart';
 import 'package:vote_player_app/features/candidates/detail/bills/detail/candidates_bills/models/candidates_bills_response_model.dart';
 import 'package:vote_player_app/features/candidates/models/candidate_model.dart';
 import 'package:vote_player_app/features/candidates/services/candidates_service.dart';
@@ -49,13 +49,12 @@ class CandidatesBillsService {
   }
 
   Future<Bill> getBillByIdWithCandidateId(
-    BillTypeEnum type,
-    String candidateId,
     String billId,
+    String? billName,
   ) async {
     try {
       String? path =
-          '${dotenv.env['API_PATH']}/bills/$billId?type=${type == BillTypeEnum.bills ? 'bills' : 'collabills'}';
+          '${dotenv.env['API_PATH']}/bills/$billId?BILL_NAME=$billName';
       final url = Uri.parse(
         path,
       );

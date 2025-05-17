@@ -21,7 +21,6 @@ class BillVoteResultsService {
       final statusCode = response.statusCode;
       if (statusCode != 200) throw 'API응답이 비정상입니다. $statusCode';
       final data = jsonDecode(response.body);
-
       BillVoteResultsResponse bvr = BillVoteResultsResponse(
         code: 404,
         items: [],
