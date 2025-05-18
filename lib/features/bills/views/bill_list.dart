@@ -74,29 +74,52 @@ class _BillListState extends State<BillList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverList.list(
-                children: const [
-                  BillListStatusPieChart(),
-                  Divider(),
-                  StatusFilter(),
-                  SizedBox(
-                    height: Sizes.size12,
+    return BlocBuilder<BillListBloc, BillListState>(
+      builder: (context, state) {
+        final sum = state.statistics.fold(0, (a, b) => a + b.count);
+        return SafeArea(
+          child: Scaffold(
+            body: Container(
+              padding: const EdgeInsets.symmetric(horizontal: Sizes.size24),
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverList.list(
+                    children: [
+                      const Center(
+                        child: Text(
+                          '전체 법률안 통계',
+                          style: TextStyle(
+                            fontSize: Sizes.size20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          '(총 $sum개)',
+                          style: const TextStyle(
+                            fontSize: Sizes.size16,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ),
+                      const BillListStatusPieChart(),
+                      const Divider(),
+                      const StatusFilter(),
+                      const SizedBox(
+                        height: Sizes.size12,
+                      ),
+                      const BillListSearchInput(),
+                      const FilteredBillList(),
+                    ],
                   ),
-                  BillListSearchInput(),
-                  FilteredBillList(),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
