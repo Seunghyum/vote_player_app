@@ -7,7 +7,6 @@ import 'package:vote_player_app/features/bills/views/widgets/bill_list_search_in
 import 'package:vote_player_app/features/bills/views/widgets/bill_list_status_pie_chart.dart';
 import 'package:vote_player_app/features/bills/views/widgets/filtered_bill_list.dart';
 import 'package:vote_player_app/features/bills/views/widgets/status_filter.dart';
-import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 
 class BillList extends StatefulWidget {
   static String routeName = '/bills';
@@ -22,7 +21,6 @@ class BillList extends StatefulWidget {
 
 class _BillListState extends State<BillList> {
   final _scrollController = ScrollController();
-  BillStatusEnum filterValue = BillStatusEnum.all;
 
   int filterStatus(String status) {
     final statistics = context.watch<BillListBloc>().statistics;
@@ -39,7 +37,17 @@ class _BillListState extends State<BillList> {
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<BillListBloc>().add(BillListNextPageEvent());
+    final search = context.read<BillListBloc>().search;
+    final status = context.read<BillListBloc>().selectedStatus;
+
+    if (_isBottom) {
+      context.read<BillListBloc>().add(
+            BillListNextPageEvent(
+              billStatus: status,
+              search: search,
+            ),
+          );
+    }
   }
 
   // 최하단 판별
@@ -47,15 +55,13 @@ class _BillListState extends State<BillList> {
     if (!_scrollController.hasClients) return false;
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
+    return currentScroll >= (maxScroll * 0.8);
   }
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
-    context.read<BillListBloc>().add(BillListFetchEvent());
   }
 
   @override

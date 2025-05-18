@@ -17,7 +17,7 @@ class BillListService {
     try {
       String? path =
           '${dotenv.env['API_PATH']}/bills?page=$page&pageCount=$pageCount&age=$age&search=$search&status=${status?.koreanName}';
-      print('@@@@@ path: $path');
+
       final url = Uri.parse(
         path,
       );

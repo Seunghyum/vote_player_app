@@ -6,28 +6,44 @@ import 'package:vote_player_app/utils/get_color_by_bill_status.dart';
 class BillListRepo {
   final BillListService _service = BillListService();
 
-  InfiniteQuery<BillListModelResponse, int> getBillsInfiniteQuery({
+  InfiniteQuery<BillListModelResponse, NextArg> getBillsInfiniteQuery({
     String? age = '22',
     String? search = '',
-    BillStatusEnum? status = BillStatusEnum.all,
+    BillStatusEnum? status,
     int? page,
     int? pageCount = 15,
   }) {
-    return InfiniteQuery<BillListModelResponse, int>(
-      key: 'bills-list-$search-$age-${status?.koreanName}',
+    return InfiniteQuery<BillListModelResponse, NextArg>(
+      key: 'bills-list-$search-$age-${status?.englishName}-$page',
       getNextArg: (state) {
         if (state.lastPage?.summary.isLastPage ?? false) return null;
-        return state.length + 1;
+        return NextArg(
+          page: state.length + 1,
+          status: status ?? BillStatusEnum.all,
+          search: search ?? '',
+        );
       },
       queryFn: (arg) {
         return _service.getBillList(
           age: age,
-          search: search,
-          status: status,
+          search: search ?? arg.search,
+          status: status ?? arg.status,
           pageCount: pageCount ?? 15,
-          page: page ?? arg,
+          page: page ?? arg.page,
         );
       },
     );
   }
+}
+
+class NextArg {
+  final int page;
+  final String search;
+  final BillStatusEnum status;
+
+  NextArg({
+    required this.page,
+    required this.status,
+    required this.search,
+  });
 }

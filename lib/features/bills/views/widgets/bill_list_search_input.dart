@@ -9,7 +9,12 @@ class BillListSearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onChanged: (text) {
-        context.read<BillListBloc>().add(SearchBillListEvent(text));
+        context.read<BillListBloc>().add(
+              SearchBillListEvent(
+                text,
+                context.read<BillListBloc>().selectedStatus,
+              ),
+            );
       },
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.search),

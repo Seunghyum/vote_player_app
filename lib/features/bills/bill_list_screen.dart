@@ -22,11 +22,11 @@ class _BillListScreenState extends State<BillListScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      lazy: false,
       create: (context) => BillListBloc(
         selectedStatus: BillStatusEnum.all,
         filteredBills: [],
         statistics: [],
+        search: "",
       ),
       child: const BillList(),
     );

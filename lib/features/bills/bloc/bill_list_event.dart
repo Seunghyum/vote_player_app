@@ -18,19 +18,30 @@ class FilterBillListEvent extends BillListEvent {
 
 class SearchBillListEvent extends BillListEvent {
   final String keyword;
+  final BillStatusEnum status;
 
-  const SearchBillListEvent(this.keyword);
+  const SearchBillListEvent(this.keyword, this.status);
 
   @override
   List<Object?> get props => [keyword];
 }
 
 class BillListNextPageEvent extends BillListEvent {
+  final String search;
+  final BillStatusEnum billStatus;
+
+  const BillListNextPageEvent({
+    required this.search,
+    required this.billStatus,
+  });
   @override
   List<Object?> get props => [];
 }
 
 class BillListFetchEvent extends BillListEvent {
+  final BillStatusEnum billStatus;
+
+  const BillListFetchEvent(this.billStatus);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [billStatus];
 }

@@ -14,29 +14,33 @@ class BillListBloc extends Bloc<BillListEvent, BillListState> {
   final BillStatusEnum selectedStatus;
   final List<BillListModel> filteredBills;
   final List<BillListStatistics> statistics;
+  final String search;
 
   BillListBloc({
     required this.selectedStatus,
     required this.filteredBills,
     required this.statistics,
+    required this.search,
   }) : super(
           BillListState(
             selectedStatus: selectedStatus,
             filteredBills: filteredBills,
             statistics: statistics,
+            search: search,
           ),
         ) {
     on<FilterBillListEvent>((event, emit) {
-      final status = event.billStatus;
-      final query = _billListRepo.getBillsInfiniteQuery(status: status);
+      final query = _billListRepo.getBillsInfiniteQuery(
+        status: event.billStatus,
+        search: state.search,
+      );
       return emit.forEach<InfiniteQueryState<BillListModelResponse>>(
         query.stream,
         onData: (queryState) {
           return state.copyWith(
-            selectedStatus: status,
+            selectedStatus: event.billStatus,
             filteredBills:
                 queryState.data?.expand((page) => page.items).toList() ?? [],
-            statistics: queryState.data?.last.statistics ?? [],
           );
         },
       );
@@ -44,34 +48,42 @@ class BillListBloc extends Bloc<BillListEvent, BillListState> {
 
     on<SearchBillListEvent>((event, emit) {
       final keyword = event.keyword.trim();
-      final query = _billListRepo.getBillsInfiniteQuery(search: keyword);
+      final query = _billListRepo.getBillsInfiniteQuery(
+        search: keyword,
+        status: state.selectedStatus,
+      );
 
       return emit.forEach<InfiniteQueryState<BillListModelResponse>>(
         query.stream,
         onData: (queryState) {
           return state.copyWith(
-            selectedStatus: BillStatusEnum.all,
+            // selectedStatus: BillStatusEnum.all,
             filteredBills:
                 queryState.data?.expand((page) => page.items).toList() ?? [],
             statistics: queryState.data?.last.statistics ?? [],
+            search: keyword,
           );
         },
       );
     });
 
     on<BillListNextPageEvent>((event, emit) {
-      print("!!! BillListNextPageEvent");
-      _billListRepo.getBillsInfiniteQuery(status: selectedStatus).getNextPage();
+      _billListRepo
+          .getBillsInfiniteQuery(
+            search: state.search,
+            status: state.selectedStatus,
+          )
+          .getNextPage();
     });
 
     on<BillListFetchEvent>((event, emit) {
       final query = _billListRepo.getBillsInfiniteQuery();
-
+      final billStatus = event.billStatus;
       return emit.forEach<InfiniteQueryState<BillListModelResponse>>(
         query.stream,
         onData: (queryState) {
           return state.copyWith(
-            selectedStatus: BillStatusEnum.all,
+            selectedStatus: billStatus,
             filteredBills:
                 queryState.data?.expand((page) => page.items).toList() ?? [],
             statistics: queryState.data?.last.statistics ?? [],

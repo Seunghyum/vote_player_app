@@ -20,13 +20,21 @@ class _FilteredBillListState extends State<FilteredBillList> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    context
+        .read<BillListBloc>()
+        .add(const BillListFetchEvent(BillStatusEnum.all));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bills = context.watch<BillListBloc>().state.filteredBills;
 
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      // primary: false,
       itemCount: bills.length,
       separatorBuilder: (context, index) => const Divider(),
       itemBuilder: (context, index) {
