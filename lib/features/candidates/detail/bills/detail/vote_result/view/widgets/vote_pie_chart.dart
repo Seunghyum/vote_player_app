@@ -39,6 +39,7 @@ class VotePieChart extends StatelessWidget {
                             value: percent < 1 ? 1 : percent,
                             title:
                                 '${percent.toStringAsFixed(1)}%\n(${s.value})',
+                            titlePositionPercentageOffset: 1.3,
                           );
                         }),
                       ],

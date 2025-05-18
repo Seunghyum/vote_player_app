@@ -51,9 +51,7 @@ final router = GoRouter(
         ),
         GoRoute(
           path: 'bills',
-          builder: (context, state) => BillListScreen(
-            age: state.uri.queryParameters['age'] ?? '22',
-          ),
+          builder: (context, state) => const BillListScreen(),
           routes: [
             GoRoute(
               path: ':billNo',

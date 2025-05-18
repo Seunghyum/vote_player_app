@@ -137,7 +137,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
     required int rejected,
   }) {
     return List.generate(8, (i) {
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      const shadows = [Shadow(color: Colors.black, blurRadius: 8)];
       final pending = widget.pending ?? 0;
       final passed = widget.passed ?? 0;
       final amendmentPassed = widget.amendmentPassed ?? 0;
@@ -163,7 +163,7 @@ class BillStatusDonutChartState extends State<BillStatusDonutChart> {
       final withdrawalPer = (withdrawal / sum * 100).round();
       final rejectedPer = (rejected / sum * 100).round();
 
-      const titlePositionPercentageOffset = 0.6;
+      const titlePositionPercentageOffset = 1.0;
       const radius = 70.0;
 
       switch (i) {

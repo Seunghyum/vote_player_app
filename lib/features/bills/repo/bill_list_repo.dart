@@ -14,7 +14,7 @@ class BillListRepo {
     int? pageCount = 15,
   }) {
     return InfiniteQuery<BillListModelResponse, int>(
-      key: 'bills-list-$search-$age-${status?.englishName}',
+      key: 'bills-list-$search-$age-${status?.koreanName}',
       getNextArg: (state) {
         if (state.lastPage?.summary.isLastPage ?? false) return null;
         return state.length + 1;
